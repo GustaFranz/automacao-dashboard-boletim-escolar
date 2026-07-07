@@ -56,17 +56,22 @@ O script [`src/automacao_portal.py`](src/automacao_portal.py) abre o portal no C
 
 > As coordenadas do PyAutoGUI foram mapeadas nesse ambiente. Se o fluxo falhar em outra máquina, ajuste resolução, escala ou zoom antes de recalibrar.
 
-### Mapeamento de coordenadas
+### Demonstração
 
-Pausa no código, posicionamento do mouse e leitura das coordenadas no terminal.
-
-![Mapeamento de coordenadas com PyAutoGUI](gifs/rpa-mapeamento-coordenadas.gif)
-
-### Fluxo completo — login, painel e download
-
-Automação ponta a ponta no portal simulado: entrar, acessar cada série e baixar o CSV.
-
-![Fluxo completo de automação do portal](gifs/rpa-fluxo-completo-portal.gif)
+<table>
+  <tr>
+    <td width="50%" align="center"><strong>Mapeamento de coordenadas</strong></td>
+    <td width="50%" align="center"><strong>Fluxo completo</strong></td>
+  </tr>
+  <tr>
+    <td width="50%"><img src="gifs/rpa-mapeamento-coordenadas.gif" alt="Mapeamento de coordenadas com PyAutoGUI" width="100%"></td>
+    <td width="50%"><img src="gifs/rpa-fluxo-completo-portal.gif" alt="Fluxo completo de automação do portal" width="100%"></td>
+  </tr>
+  <tr>
+    <td width="50%" align="center"><sub>Pausa no código, mouse sobre o elemento e leitura da coordenada no terminal.</sub></td>
+    <td width="50%" align="center"><sub>Login, navegação pelas séries e download dos CSVs.</sub></td>
+  </tr>
+</table>
 
 ### Como executar
 
