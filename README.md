@@ -1,8 +1,15 @@
 ﻿# Automação — Dashboard e Boletim Escolar
 
+![Python](https://img.shields.io/badge/Python-3.12-blue)
+![Streamlit](https://img.shields.io/badge/Dashboard-Streamlit-ff4b4b)
+![Pandas](https://img.shields.io/badge/Dados-Pandas-150458)
+![Status](https://img.shields.io/badge/Status-v1%20concluida-green)
+
 Projeto em Python para consolidar notas de simulado, provas e projeto pedagógico, calcular médias ponderadas, gerar boletins e montar um dashboard escolar.
 
-**Status:** em construção — etapas 1 a 4 concluídas; **5_Médias** em andamento.
+**Status:** v1 concluída — etapas 1 a 7 implementadas; **8_v2** permanece como backlog de melhorias.
+
+> Este projeto será revisitado muitas vezes: pretendo reler cada etapa aos poucos, compreender melhor o código e ir refinando a solução com o tempo.
 
 ## Por que este projeto existe
 
@@ -26,12 +33,24 @@ Simula a rotina de uma coordenação escolar com **automação ponta a ponta**:
 
 > Cenário inspirado na rotina escolar: várias fontes de nota, portal sem API e tarefas repetitivas que podem ser automatizadas.
 
+## Fluxo da automação
+
+```mermaid
+flowchart LR
+  A[Portal HTML] --> B[CSV simulado]
+  C[Excel provas] --> D[Consolidacao]
+  E[PDF projetos] --> D
+  D --> F[CSV consolidado]
+  D --> G[Boletins HTML]
+  D --> H[Dashboard Streamlit]
+```
+
 ## Progresso
 
-**4 de 8 etapas concluídas** · etapa **5_Médias** em andamento (20%)
+**7 de 8 etapas concluídas** · etapa **8_v2** em backlog
 
 <p align="center">
-  <img src="docs/progresso-etapas.png" alt="Progresso: 1_Dados, 2_Portal, 3_RPA e 4_Leitura concluídos; 5_Médias em andamento; demais pendentes" width="760">
+  <img src="docs/progresso-etapas.png" alt="Progresso: etapas 1 a 7 concluidas; 8_v2 em backlog" width="760">
 </p>
 
 | Situação | Significado |
@@ -46,8 +65,48 @@ Detalhes de cada etapa em **[detalhamento.md](detalhamento.md)**.
 ## Aprendizados (até aqui)
 
 - Primeira automação em Python: o fluxo parecia complexo no início, mas repetir funções e mapear coordenadas com PyAutoGUI foi tornando o processo compreensível.
+- A partir da consolidação, boletins e dashboard, a densidade de conteúdo aumentou: imports entre módulos, regras de média, HTML e Streamlit exigiram mais pausas para entender cada parte.
+- Não considero o projeto “encerrado na minha cabeça”: volto a ele para revisar etapas, testar execuções e melhorar aos poucos.
 
 Registro completo por desafio em **[detalhamento.md](detalhamento.md)**.
+
+## Resultados da v1
+
+<table>
+  <tr>
+    <td width="50%" align="center"><strong>Portal fictício</strong></td>
+    <td width="50%" align="center"><strong>Fontes de dados simuladas</strong></td>
+  </tr>
+  <tr>
+    <td width="50%"><img src="docs/capturas/01-portal-login.png" alt="Portal fictício de login" width="100%"></td>
+    <td width="50%"><img src="docs/capturas/02-fontes-dados.png" alt="CSV, Excel e PDF de notas" width="100%"></td>
+  </tr>
+  <tr>
+    <td width="50%" align="center"><sub>Login local do ambiente de demonstração.</sub></td>
+    <td width="50%" align="center"><sub>Três formatos diferentes de entrada.</sub></td>
+  </tr>
+  <tr>
+    <td width="50%" align="center"><strong>Base consolidada</strong></td>
+    <td width="50%" align="center"><strong>Boletim individual</strong></td>
+  </tr>
+  <tr>
+    <td width="50%"><img src="docs/capturas/03-notas-consolidadas.png" alt="CSV consolidado com médias" width="100%"></td>
+    <td width="50%"><img src="docs/capturas/04-boletim-aluno.png" alt="Boletim HTML por aluno" width="100%"></td>
+  </tr>
+  <tr>
+    <td width="50%" align="center"><sub>Notas unidas por turma, aluno e disciplina.</sub></td>
+    <td width="50%" align="center"><sub>Documento simples para conferência.</sub></td>
+  </tr>
+  <tr>
+    <td colspan="2" align="center"><strong>Dashboard escolar</strong></td>
+  </tr>
+  <tr>
+    <td colspan="2"><img src="docs/capturas/05-dashboard.png" alt="Dashboard com indicadores da turma" width="100%"></td>
+  </tr>
+  <tr>
+    <td colspan="2" align="center"><sub>Indicadores agregados com filtro por turma.</sub></td>
+  </tr>
+</table>
 
 ## Automação RPA — evidências (Desafio 3)
 
@@ -84,10 +143,13 @@ O script [`src/automacao_portal.py`](src/automacao_portal.py) abre o portal no C
 ### Como executar
 
 ```bash
-python src/automacao_portal.py
+python main.py
+python -m src.consolidacao
+python -m src.boletins
+streamlit run dashboard.py
 ```
 
-Requisitos: Chrome instalado no caminho padrão e o mesmo ambiente de tela descrito acima.
+Requisitos: Chrome instalado no caminho padrão (para o RPA) e dependências em `requirements.txt`.
 
 ## Como construir o projeto
 
@@ -104,6 +166,8 @@ automacao-dashboard-boletim-escolar/
 │   ├── provas/
 │   └── projetos/
 ├── docs/
+│   ├── capturas/
+│   ├── gerar_capturas.py
 │   ├── progresso-etapas.svg
 │   └── progresso-etapas.png
 ├── gifs/
@@ -111,9 +175,17 @@ automacao-dashboard-boletim-escolar/
 │   └── rpa-fluxo-completo-portal.gif
 ├── portal_simulado/
 ├── src/
-│   └── automacao_portal.py
+│   ├── automacao_portal.py
+│   ├── boletins.py
+│   ├── consolidacao.py
+│   ├── leitor_projetos.py
+│   ├── leitor_provas.py
+│   └── leitor_simulados.py
+├── dashboard.py
+├── main.py
 ├── saidas/
 │   ├── boletins/
+│   ├── relatorios/
 │   └── prints/
 ├── detalhamento.md
 ├── requirements.txt

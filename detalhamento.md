@@ -3,7 +3,9 @@
 Documento de referência dos módulos desta automação. Cada seção descreve um desafio a ser implementado: requisitos, entradas, saídas e critérios de aceite — sem prescrever a solução em código.
 
 **Escola fictícia:** Colégio Caminhos do Futuro  
-**Status geral:** em construção — Desafios 1 a 3 concluídos
+**Status geral:** v1 concluída — Desafios 1 a 7 implementados; Desafio 8 em backlog
+
+> Pretendo revisitar este projeto muitas vezes. A v1 funciona, mas ainda estou assimilando etapas mais densas (consolidação, boletins e dashboard) e refinando aos poucos.
 
 ## Contexto geral
 
@@ -205,17 +207,20 @@ Dados carregados e inspecionáveis, prontos para consolidação.
 
 ### Critérios de aceite
 
-- [ ] CSV, Excel e PDF são lidos com sucesso.
-- [ ] Consigo visualizar uma amostra dos dados carregados.
-- [ ] O formato das provas (largo, com disciplinas em colunas) é reconhecido.
+- [x] CSV, Excel e PDF são lidos com sucesso.
+- [x] Consigo visualizar uma amostra dos dados carregados.
+- [x] O formato das provas (largo, com disciplinas em colunas) é reconhecido.
 
 ### Status
 
-- [ ] Pendente
+- [x] Concluído
 
 ### Aprendizados
 
-_(preencher após implementação)_
+- Cada formato exigiu uma abordagem diferente: `read_csv`, `read_excel` e extração de tabela em PDF com PDFPlumber.
+- Transformar planilhas largas em formato longo (`melt`) foi o passo que mais exigiu atenção: turma, aluno e disciplina precisam bater entre as três fontes.
+- Separei a leitura em três módulos (`leitor_simulados`, `leitor_provas`, `leitor_projetos`) para manter cada responsabilidade isolada.
+- Ainda reviso esta etapa para entender melhor como os dados se encaixam antes da consolidação.
 
 ---
 
@@ -242,17 +247,21 @@ Base consolidada com média e situação por aluno e disciplina.
 
 ### Critérios de aceite
 
-- [ ] Cada aluno possui média calculada nas 10 disciplinas.
-- [ ] Uma amostra manual confere com o resultado esperado.
-- [ ] A situação (aprovado ou recuperação) está definida para cada registro.
+- [x] Cada aluno possui média calculada nas 10 disciplinas.
+- [x] Uma amostra manual confere com o resultado esperado.
+- [x] A situação (aprovado ou recuperação) está definida para cada registro.
 
 ### Status
 
-- [ ] Pendente
+- [x] Concluído
 
 ### Aprendizados
 
-_(preencher após implementação)_
+- O `merge` por turma, aluno e disciplina exige que os nomes e formatos das colunas estejam alinhados entre simulado, prova e projeto.
+- A conversão da nota de projeto (× 2) e a média ponderada foram regras que precisei revisar mais de uma vez para não errar o cálculo.
+- A saída consolidada em CSV (`saidas/relatorios/notas_consolidadas.csv`) virou a base para boletins e dashboard.
+- Enfrentei conflito de imports entre módulos nesta fase; padronizar `from src.*` destravou as etapas seguintes.
+- Volto a esta etapa para conferir amostras manualmente e consolidar meu entendimento da regra pedagógica.
 
 ---
 
@@ -278,17 +287,21 @@ Boletins individuais em pasta de saída (ex.: `saidas/boletins/`).
 
 ### Critérios de aceite
 
-- [ ] Existe um arquivo por aluno.
-- [ ] Todas as disciplinas aparecem no boletim.
-- [ ] Médias e situação conferem em uma amostra verificada manualmente.
+- [x] Existe um arquivo por aluno.
+- [x] Todas as disciplinas aparecem no boletim.
+- [x] Médias e situação conferem em uma amostra verificada manualmente.
 
 ### Status
 
-- [ ] Pendente
+- [x] Concluído
 
 ### Aprendizados
 
-_(preencher após implementação)_
+- Gerei HTML simples, aberto no navegador, priorizando legibilidade em vez de layout elaborado.
+- O agrupamento por turma e aluno (`groupby`) produz um arquivo por estudante em `saidas/boletins/`.
+- Montar a tabela linha a linha dentro de uma string HTML exigiu cuidado para não perder colunas ou repetir dados.
+- Esta etapa aumentou a densidade do projeto: passei de manipular tabelas a produzir documento individual para cada aluno.
+- Pretendo revisitar os boletins no futuro, inclusive para evoluir para PDF na v2.
 
 ---
 
@@ -317,17 +330,20 @@ Dashboard interativo aberto no navegador.
 
 ### Critérios de aceite
 
-- [ ] O painel abre localmente sem erro.
-- [ ] Os indicadores refletem os dados consolidados.
-- [ ] É possível explorar a visão geral ou filtrar por turma.
+- [x] O painel abre localmente sem erro.
+- [x] Os indicadores refletem os dados consolidados.
+- [x] É possível explorar a visão geral ou filtrar por turma.
 
 ### Status
 
-- [ ] Pendente
+- [x] Concluído
 
 ### Aprendizados
 
-_(preencher após implementação)_
+- Esta foi a etapa em que senti mais densidade de conteúdo: além de ler dados, precisei pensar em indicadores, layout e bibliotecas novas (Streamlit e Plotly).
+- Houve conflito de imports entre módulos (`from leitor_*` vs `from src.*`), o que atrasou a execução do dashboard até padronizar os caminhos.
+- Mantive o painel simples de propósito: métricas, gráfico por disciplina e tabela de recuperação. Filtros avançados e visual mais elaborado ficam para a v2.
+- Não encaro esta etapa como “dominada de vez”: volto ao dashboard para entender melhor cada indicador e melhorar o projeto com calma.
 
 ---
 
