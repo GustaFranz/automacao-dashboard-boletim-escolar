@@ -3,7 +3,7 @@
 Documento de referência dos módulos desta automação. Cada seção descreve um desafio a ser implementado: requisitos, entradas, saídas e critérios de aceite — sem prescrever a solução em código.
 
 **Escola fictícia:** Colégio Caminhos do Futuro  
-**Status geral:** em construção
+**Status geral:** em construção — Desafios 1 a 3 concluídos
 
 ## Contexto geral
 
@@ -48,6 +48,15 @@ Este projeto combina três camadas de automação:
 
 Cenário inspirado na rotina escolar: várias fontes de nota, portal sem API e tarefas repetitivas que podem ser automatizadas.
 
+### Ambiente calibrado (PyAutoGUI)
+
+| Item | Valor |
+|------|-------|
+| Resolução do monitor | 1920×1080 |
+| Escala do Windows | 125% (1536×864 lógico) |
+| Navegador | Google Chrome maximizado |
+| Zoom do navegador | 100% |
+
 ---
 
 ## Desafio 1 — Mapeamento dos dados de entrada
@@ -75,16 +84,17 @@ Nenhum arquivo gerado nesta etapa. O resultado é a compreensão do cenário e d
 
 ### Critérios de aceite
 
-- [ ] Consigo explicar a origem e o formato de cada tipo de nota.
-- [ ] Existem arquivos de entrada para as três séries.
+- [x] Consigo explicar a origem e o formato de cada tipo de nota.
+- [x] Existem arquivos de entrada para as três séries.
 
 ### Status
 
-- [ ] Pendente
+- [x] Concluído
 
 ### Aprendizados
 
-_(preencher após implementação)_
+- Mapeei três fontes distintas (portal/CSV, Excel de provas, PDF de projetos) antes de pensar em código de consolidação.
+- Entender o cenário fictício da escola facilitou decidir o que automatizar primeiro: o simulado, por ser repetitivo e acessível via portal.
 
 ---
 
@@ -112,17 +122,18 @@ Confirmação de que o portal funciona e CSVs de teste disponíveis.
 
 ### Critérios de aceite
 
-- [ ] O login funciona com as credenciais de demonstração.
-- [ ] Consigo acessar o painel e as páginas das três séries.
-- [ ] Consigo baixar o CSV de simulado de cada série.
+- [x] O login funciona com as credenciais de demonstração.
+- [x] Consigo acessar o painel e as páginas das três séries.
+- [x] Consigo baixar o CSV de simulado de cada série.
 
 ### Status
 
-- [ ] Pendente
+- [x] Concluído
 
 ### Aprendizados
 
-_(preencher após implementação)_
+- Testar o fluxo manualmente antes do PyAutoGUI evitou automatizar um caminho errado.
+- Validar login, painel e download série por série deu segurança para a etapa de RPA.
 
 ---
 
@@ -151,17 +162,20 @@ Baixar os relatórios de simulado manualmente, série por série, não escala. E
 
 ### Critérios de aceite
 
-- [ ] Os CSVs das três séries são obtidos sem intervenção manual repetida.
-- [ ] A automação com PyAutoGUI funciona de forma reproduzível na máquina local.
-- [ ] Há registro visual ou log da execução.
+- [x] Os CSVs das três séries são obtidos sem intervenção manual repetida.
+- [x] A automação com PyAutoGUI funciona de forma reproduzível na máquina local.
+- [x] Há registro visual ou log da execução.
 
 ### Status
 
-- [ ] Pendente
+- [x] Concluído
 
 ### Aprendizados
 
-_(preencher após implementação)_
+- Este foi meu **primeiro projeto de automação** em Python. No início o fluxo parecia complexo — portal, login, três séries, downloads — mas, ao repetir funções (`fazer_login`, `painel_simulado_da_turma`, `baixar_csv_turma`, `botao_voltar`), o processo começou a ficar automático na minha cabeça também.
+- Mapear coordenadas com pausa no código exigiu paciência, mas foi o passo que mais deixou claro como o PyAutoGUI enxerga a tela.
+- Ver o script executar sozinho depois de calibrar tudo trouxe grande satisfação: percebi que consegui chegar a um projeto que, à princípio, parecia difícil, mas foi se tornando compreensível aos poucos.
+- Registrei o mapeamento e o fluxo completo em GIFs (`gifs/rpa-mapeamento-coordenadas.gif` e `gifs/rpa-fluxo-completo-portal.gif`) como evidência do processo.
 
 ---
 

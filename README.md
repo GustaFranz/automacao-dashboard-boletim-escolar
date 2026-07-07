@@ -2,7 +2,7 @@
 
 Projeto em Python para consolidar notas de simulado, provas e projeto pedagógico, calcular médias ponderadas, gerar boletins e montar um dashboard escolar.
 
-**Status:** em construção — este repositório será desenvolvido aos poucos, etapa por etapa.
+**Status:** em construção — Desafios 2 e 3 concluídos; automação RPA do portal implementada.
 
 ## Por que este projeto existe
 
@@ -26,24 +26,63 @@ Simula a rotina de uma coordenação escolar com **automação ponta a ponta**:
 
 > Cenário inspirado na rotina escolar: várias fontes de nota, portal sem API e tarefas repetitivas que podem ser automatizadas.
 
+## Progresso
+
+| Desafio | Conteúdo | Status |
+|---------|----------|--------|
+| 1 | Mapeamento dos dados de entrada | Concluído |
+| 2 | Validação do portal fictício | Concluído |
+| 3 | Automação do download do simulado | Concluído |
+| 4 | Leitura dos arquivos de notas | Pendente |
+| 5 | Consolidação e cálculo de médias | Pendente |
+| 6 | Geração de boletins | Pendente |
+| 7 | Dashboard escolar | Pendente |
+| 8 | Evoluções (versão 2) | Backlog |
+
+Detalhes e aprendizados em **[detalhamento.md](detalhamento.md)**.
+
+## Automação RPA — evidências (Desafio 3)
+
+O script [`src/automacao_portal.py`](src/automacao_portal.py) abre o portal no Chrome, faz login, navega pelas três séries e aciona o download dos CSVs de simulado.
+
+### Ambiente calibrado
+
+| Item | Valor |
+|------|-------|
+| Resolução do monitor | 1920×1080 |
+| Escala do Windows | 125% (1536×864 lógico) |
+| Navegador | Google Chrome maximizado |
+| Zoom do navegador | 100% |
+
+> As coordenadas do PyAutoGUI foram mapeadas nesse ambiente. Se o fluxo falhar em outra máquina, ajuste resolução, escala ou zoom antes de recalibrar.
+
+### Mapeamento de coordenadas
+
+Pausa no código, posicionamento do mouse e leitura das coordenadas no terminal.
+
+![Mapeamento de coordenadas com PyAutoGUI](gifs/rpa-mapeamento-coordenadas.gif)
+
+### Fluxo completo — login, painel e download
+
+Automação ponta a ponta no portal simulado: entrar, acessar cada série e baixar o CSV.
+
+![Fluxo completo de automação do portal](gifs/rpa-fluxo-completo-portal.gif)
+
+### Como executar
+
+```bash
+python src/automacao_portal.py
+```
+
+Requisitos: Chrome instalado no caminho padrão e o mesmo ambiente de tela descrito acima.
+
 ## Como construir o projeto
 
 O desenvolvimento é organizado em desafios descritos em **[detalhamento.md](detalhamento.md)**.
 
 Cada desafio define contexto, requisitos, entradas, saídas e critérios de aceite — sem prescrever a implementação. A ideia é ir resolvendo aos poucos, pesquisando e praticando cada etapa.
 
-| Desafio | Conteúdo |
-|---------|----------|
-| 1 | Mapeamento dos dados de entrada |
-| 2 | Validação do portal fictício |
-| 3 | Automação do download do simulado |
-| 4 | Leitura dos arquivos de notas |
-| 5 | Consolidação e cálculo de médias |
-| 6 | Geração de boletins |
-| 7 | Dashboard escolar |
-| 8 | Evoluções (versão 2) |
-
-## Estrutura prevista
+## Estrutura do repositório
 
 ```text
 automacao-dashboard-boletim-escolar/
@@ -51,8 +90,12 @@ automacao-dashboard-boletim-escolar/
 │   ├── simulados/
 │   ├── provas/
 │   └── projetos/
+├── gifs/
+│   ├── rpa-mapeamento-coordenadas.gif
+│   └── rpa-fluxo-completo-portal.gif
 ├── portal_simulado/
 ├── src/
+│   └── automacao_portal.py
 ├── saidas/
 │   ├── boletins/
 │   └── prints/
@@ -60,8 +103,6 @@ automacao-dashboard-boletim-escolar/
 ├── requirements.txt
 └── README.md
 ```
-
-> Nem todas as pastas e scripts existem ainda. Elas serão criadas conforme os desafios do detalhamento.
 
 ## Fontes de dados (simuladas)
 
@@ -71,15 +112,14 @@ automacao-dashboard-boletim-escolar/
 | Provas | Excel | Professores |
 | Projeto pedagógico | PDF | Coordenação |
 
-## Tecnologias previstas
+## Tecnologias
 
-- Python
-- Pandas
-- OpenPyXL
-- PDFPlumber
-- Streamlit
-- Plotly
-- PyAutoGUI
+| Uso | Ferramenta |
+|-----|------------|
+| Automação de interface (RPA) | PyAutoGUI |
+| Leitura e consolidação de dados | Pandas, OpenPyXL, PDFPlumber |
+| Dashboard | Streamlit, Plotly |
+| Linguagem | Python |
 
 Dependências listadas em `requirements.txt`.
 

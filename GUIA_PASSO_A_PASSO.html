@@ -1,0 +1,2112 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Guia passo a passo - automacao-dashboard-boletim-escolar</title>
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --paper: #ffffff;
+      --ink: #1f2937;
+      --muted: #667085;
+      --line: #d8e0ea;
+      --brand: #17324d;
+      --accent: #1f6feb;
+      --code-bg: #101828;
+      --code-ink: #eef4ff;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: Arial, Helvetica, sans-serif; background: var(--bg); color: var(--ink); line-height: 1.55; }
+    .layout { display: grid; grid-template-columns: 290px minmax(0, 1fr); min-height: 100vh; transition: grid-template-columns .2s ease; }
+    body.sidebar-collapsed .layout { grid-template-columns: 0 minmax(0, 1fr); }
+    body.sidebar-collapsed aside { transform: translateX(-100%); padding-left: 0; padding-right: 0; border-right: 0; }
+    body.sidebar-collapsed main { max-width: 1100px; }
+    .toggle-sidebar { position: fixed; top: 14px; left: 14px; z-index: 20; border: 1px solid var(--line); border-radius: 6px; background: var(--brand); color: white; padding: 9px 12px; font-weight: 700; cursor: pointer; box-shadow: 0 6px 18px rgba(15, 23, 42, .18); }
+    .toggle-sidebar:hover { background: var(--accent); }
+    aside { position: sticky; top: 0; height: 100vh; overflow: auto; padding: 58px 22px 22px; background: #ffffff; border-right: 1px solid var(--line); transition: transform .2s ease, padding .2s ease; }
+    aside h2 { margin: 0 0 14px; font-size: 16px; color: var(--brand); }
+    aside a { display: block; padding: 8px 0; color: #344054; text-decoration: none; border-bottom: 1px solid #eef2f6; font-size: 14px; }
+    aside a:hover { color: var(--accent); }
+    main { max-width: 980px; width: 100%; margin: 0 auto; padding: 34px 34px 80px; background: var(--paper); }
+    h1 { color: var(--brand); margin: 34px 0 12px; padding-bottom: 10px; border-bottom: 2px solid var(--line); font-size: 30px; }
+    h1:first-child { margin-top: 0; }
+    h2 { color: #243b53; margin: 24px 0 8px; font-size: 20px; }
+    p { margin: 8px 0; }
+    .bullet, .numbered { margin-left: 16px; }
+    code { background: #eef4ff; color: #17324d; padding: 2px 5px; border-radius: 4px; font-family: Consolas, monospace; font-size: 0.95em; }
+    pre { background: var(--code-bg); color: var(--code-ink); padding: 16px; border-radius: 8px; overflow: auto; border: 1px solid #344054; }
+    pre code { background: transparent; color: inherit; padding: 0; border-radius: 0; display: block; white-space: pre; }
+    pre code::before { content: attr(data-lang); display: block; color: #98a2b3; font-size: 12px; margin-bottom: 8px; text-transform: uppercase; }
+    @media (max-width: 900px) {
+      .layout { display: block; }
+      aside { position: static; height: auto; }
+      main { padding: 24px 18px 60px; }
+    }
+  </style>
+</head>
+<body>
+  <button class="toggle-sidebar" type="button" onclick="toggleSidebar()">☰ Sumário</button>
+  <div class="layout">
+    <aside>
+      <h2>Sumario</h2>
+      <a href="#tutorial-passo-a-passo-automacao-dashboard-boletim-escolar">Tutorial passo a passo - automacao-dashboard-boletim-escolar</a>
+<a href="#etapa-1-abrir-o-projeto-e-entender-as-pastas">ETAPA 1 - Abrir o projeto e entender as pastas</a>
+<a href="#etapa-2-instalar-e-testar-as-bibliotecas">ETAPA 2 - Instalar e testar as bibliotecas</a>
+<a href="#etapa-3-testar-o-portal-ficticio-manualmente">ETAPA 3 - Testar o portal ficticio manualmente</a>
+<a href="#etapa-4-aprender-pyautogui-por-partes">ETAPA 4 - Aprender PyAutoGUI por partes</a>
+<a href="#etapa-5-criar-main-py">ETAPA 5 - Criar main.py</a>
+<a href="#etapa-6-ler-csv-do-simulado">ETAPA 6 - Ler CSV do simulado</a>
+<a href="#etapa-7-ler-excel-das-provas">ETAPA 7 - Ler Excel das provas</a>
+<a href="#etapa-8-ler-pdf-do-projeto-pedagogico">ETAPA 8 - Ler PDF do projeto pedagogico</a>
+<a href="#etapa-9-consolidar-notas-e-calcular-medias">ETAPA 9 - Consolidar notas e calcular medias</a>
+<a href="#etapa-10-gerar-boletins-em-html">ETAPA 10 - Gerar boletins em HTML</a>
+<a href="#etapa-11-criar-dashboard-com-streamlit">ETAPA 11 - Criar dashboard com Streamlit</a>
+<a href="#etapa-12-atualizar-main-py-para-rodar-o-fluxo">ETAPA 12 - Atualizar main.py para rodar o fluxo</a>
+<a href="#etapa-13-atualizar-readme">ETAPA 13 - Atualizar README</a>
+<a href="#resumo-dos-commits-sugeridos">Resumo dos commits sugeridos</a>
+<a href="#como-estudar-com-este-tutorial">Como estudar com este tutorial</a>
+    </aside>
+    <main>
+      <h1 id="tutorial-passo-a-passo-automacao-dashboard-boletim-escolar">Tutorial passo a passo - automacao-dashboard-boletim-escolar</h1>
+
+<p>Este arquivo e um tutorial para voce construir o projeto enquanto aprende.</p>
+
+<p>A ideia nao e apenas copiar codigo pronto. A ideia e:</p>
+
+<p class="numbered">1. entender o objetivo de cada arquivo;</p>
+<p class="numbered">2. digitar ou colar pequenos blocos de codigo;</p>
+<p class="numbered">3. testar cada parte;</p>
+<p class="numbered">4. ler a explicacao linha por linha;</p>
+<p class="numbered">5. fazer commits nos momentos certos.</p>
+
+<p>Projeto:</p>
+
+<pre><code data-lang="text">
+automacao-dashboard-boletim-escolar
+</code></pre>
+
+<p>Escola ficticia:</p>
+
+<pre><code data-lang="text">
+Colegio Caminhos do Futuro
+</code></pre>
+
+<p>Login ficticio do portal:</p>
+
+<pre><code data-lang="text">
+Email: coordenacao@colegiocaminhosfuturo.local
+Senha: Demo@2026
+</code></pre>
+
+<p>Pasta correta do projeto:</p>
+
+<pre><code data-lang="text">
+C:\Users\mgran\OneDrive\Area de Trabalho\GUSTAVO\PROGRAMACAO\PROJETOS\automacao-dashboard-boletim-escolar
+</code></pre>
+
+<p>No seu Windows, o caminho pode aparecer com acentos:</p>
+
+<pre><code data-lang="text">
+C:\Users\mgran\OneDrive\Área de Trabalho\GUSTAVO\PROGRAMAÇÃO\PROJETOS\automacao-dashboard-boletim-escolar
+</code></pre>
+
+<p>---</p>
+
+<h1 id="etapa-1-abrir-o-projeto-e-entender-as-pastas">ETAPA 1 - Abrir o projeto e entender as pastas</h1>
+
+<h2 id="objetivo">Objetivo</h2>
+
+<p>Abrir a pasta correta no VS Code e entender para que serve cada pasta.</p>
+
+<h2 id="como-fazer">Como fazer</h2>
+
+<p class="numbered">1. Abra o VS Code.</p>
+<p class="numbered">2. Clique em `File`.</p>
+<p class="numbered">3. Clique em `Open Folder`.</p>
+<p class="numbered">4. Selecione a pasta `automacao-dashboard-boletim-escolar`.</p>
+<p class="numbered">5. Abra o terminal em `Terminal &gt; New Terminal`.</p>
+
+<h2 id="o-que-deve-existir-na-pasta">O que deve existir na pasta</h2>
+
+<pre><code data-lang="text">
+automacao-dashboard-boletim-escolar/
+├── dados/
+├── portal_simulado/
+├── saidas/
+├── src/
+├── .gitignore
+├── GUIA_PASSO_A_PASSO.md
+├── GUIA_PASSO_A_PASSO.html
+├── README.md
+└── requirements.txt
+</code></pre>
+
+<h2 id="explicacao-das-pastas">Explicacao das pastas</h2>
+
+<p><code>dados/</code></p>
+
+<p>Arquivos de entrada do projeto. Aqui ficam notas ficticias de simulado, provas e projeto pedagogico.</p>
+
+<p><code>portal_simulado/</code></p>
+
+<p>Site local ficticio. Ele simula um portal escolar onde a coordenacao baixa as notas do simulado.</p>
+
+<p><code>saidas/</code></p>
+
+<p>Arquivos gerados pelo programa: prints, relatorios, boletins e dashboards.</p>
+
+<p><code>src/</code></p>
+
+<p>Codigo Python do projeto.</p>
+
+<p><code>requirements.txt</code></p>
+
+<p>Lista das bibliotecas usadas.</p>
+
+<p><code>README.md</code></p>
+
+<p>Apresentacao profissional do projeto para o GitHub.</p>
+
+<h2 id="teste">Teste</h2>
+
+<p>No terminal, rode:</p>
+
+<pre><code data-lang="powershell">
+pwd
+</code></pre>
+
+<h2 id="resultado-esperado">Resultado esperado</h2>
+
+<p>O terminal deve mostrar que voce esta dentro da pasta:</p>
+
+<pre><code data-lang="text">
+automacao-dashboard-boletim-escolar
+</code></pre>
+
+<h2 id="momento-de-commit">Momento de commit</h2>
+
+<p>Se voce ainda nao commitou a estrutura inicial:</p>
+
+<pre><code data-lang="powershell">
+git add .
+git commit -m &quot;Cria estrutura inicial do projeto&quot;
+git push
+</code></pre>
+
+<p>---</p>
+
+<h1 id="etapa-2-instalar-e-testar-as-bibliotecas">ETAPA 2 - Instalar e testar as bibliotecas</h1>
+
+<h2 id="objetivo">Objetivo</h2>
+
+<p>Instalar as bibliotecas que o projeto vai usar.</p>
+
+<h2 id="bibliotecas">Bibliotecas</h2>
+
+<p><code>pandas</code></p>
+
+<p>Usada para trabalhar com tabelas.</p>
+
+<p><code>openpyxl</code></p>
+
+<p>Usada para ler arquivos Excel.</p>
+
+<p><code>pdfplumber</code></p>
+
+<p>Usada para extrair tabelas de arquivos PDF.</p>
+
+<p><code>streamlit</code></p>
+
+<p>Usada para criar o dashboard.</p>
+
+<p><code>plotly</code></p>
+
+<p>Usada para criar graficos interativos.</p>
+
+<p><code>pyautogui</code></p>
+
+<p>Usada para controlar mouse, teclado e tela.</p>
+
+<h2 id="como-instalar">Como instalar</h2>
+
+<p>No terminal do VS Code, rode:</p>
+
+<pre><code data-lang="powershell">
+python -m pip install -r requirements.txt
+</code></pre>
+
+<p>Se <code>python</code> nao funcionar, tente:</p>
+
+<pre><code data-lang="powershell">
+py -m pip install -r requirements.txt
+</code></pre>
+
+<h2 id="teste">Teste</h2>
+
+<p>Rode:</p>
+
+<pre><code data-lang="powershell">
+python -c &quot;import pandas, openpyxl, pdfplumber, streamlit, plotly, pyautogui; print(&#x27;Bibliotecas OK&#x27;)&quot;
+</code></pre>
+
+<h2 id="explicacao-do-comando">Explicacao do comando</h2>
+
+<p><code>python -c</code></p>
+
+<p>Executa um pequeno codigo Python direto no terminal.</p>
+
+<p><code>import pandas, openpyxl, pdfplumber, streamlit, plotly, pyautogui</code></p>
+
+<p>Tenta importar todas as bibliotecas do projeto.</p>
+
+<p><code>print(&#x27;Bibliotecas OK&#x27;)</code></p>
+
+<p>Mostra uma mensagem se todas foram importadas sem erro.</p>
+
+<h2 id="resultado-esperado">Resultado esperado</h2>
+
+<pre><code data-lang="text">
+Bibliotecas OK
+</code></pre>
+
+<p>---</p>
+
+
+<h2>Momento de commit</h2>
+<p>Depois que as bibliotecas instalarem e o teste mostrar Bibliotecas OK, registre esse ponto.</p>
+<pre><code data-lang="powershell">git add requirements.txt
+git commit -m "Configura bibliotecas do projeto"
+git push</code></pre>
+
+<h1 id="etapa-3-testar-o-portal-ficticio-manualmente">ETAPA 3 - Testar o portal ficticio manualmente</h1>
+
+<h2 id="objetivo">Objetivo</h2>
+
+<p>Antes de automatizar, voce precisa conhecer a tela que sera automatizada.</p>
+
+<h2 id="como-abrir">Como abrir</h2>
+
+<p class="numbered">1. No VS Code, abra a pasta `portal_simulado`.</p>
+<p class="numbered">2. Clique com o botao direito em `login.html`.</p>
+<p class="numbered">3. Clique em `Reveal in File Explorer`.</p>
+<p class="numbered">4. De dois cliques em `login.html`.</p>
+
+<h2 id="como-entrar">Como entrar</h2>
+
+<p>Digite no campo email:</p>
+
+<pre><code data-lang="text">
+coordenacao@colegiocaminhosfuturo.local
+</code></pre>
+
+<p>Digite no campo senha:</p>
+
+<pre><code data-lang="text">
+Demo@2026
+</code></pre>
+
+<p>Clique em <code>Entrar</code>.</p>
+
+<h2 id="o-que-observar">O que observar</h2>
+
+<p>Veja onde ficam:</p>
+
+<p class="bullet">• campo de email;</p>
+<p class="bullet">• campo de senha;</p>
+<p class="bullet">• botao Entrar;</p>
+<p class="bullet">• botao Baixar CSV nas paginas das turmas.</p>
+
+<p>Esses lugares serao usados pelo PyAutoGUI.</p>
+
+<h2 id="resultado-esperado">Resultado esperado</h2>
+
+<p>Voce consegue entrar no painel e abrir as turmas.</p>
+
+<p>---</p>
+
+
+<h2>Momento de commit</h2>
+<p>Depois de testar o portal manualmente e confirmar que login e botoes funcionam, registre esse marco.</p>
+<pre><code data-lang="powershell">git add portal_simulado
+git commit -m "Valida portal ficticio do simulado"
+git push</code></pre>
+
+<h1 id="etapa-4-aprender-pyautogui-por-partes">ETAPA 4 - Aprender PyAutoGUI por partes</h1>
+
+<h2 id="objetivo">Objetivo</h2>
+
+<p>Criar a automacao do portal passo a passo, entendendo cada linha.</p>
+
+<p>Arquivo que vamos criar:</p>
+
+<pre><code data-lang="text">
+src/automacao_portal.py
+</code></pre>
+
+<h2 id="4-1-criar-o-arquivo">4.1 - Criar o arquivo</h2>
+
+<p>No VS Code:</p>
+
+<p class="numbered">1. Abra a pasta `src`.</p>
+<p class="numbered">2. Clique com o botao direito.</p>
+<p class="numbered">3. Clique em `New File`.</p>
+<p class="numbered">4. Crie:</p>
+
+<pre><code data-lang="text">
+automacao_portal.py
+</code></pre>
+
+<p>---</p>
+
+<h2 id="4-2-primeiro-bloco-importar-bibliotecas">4.2 - Primeiro bloco: importar bibliotecas</h2>
+
+<p>Digite no arquivo:</p>
+
+<pre><code data-lang="python">
+from pathlib import Path
+import time
+import webbrowser
+
+import pyautogui
+</code></pre>
+
+<h2 id="explicacao-linha-por-linha">Explicacao linha por linha</h2>
+
+<p><code>from pathlib import Path</code></p>
+
+<p>Importa <code>Path</code>, uma ferramenta moderna do Python para trabalhar com caminhos de arquivos e pastas.</p>
+
+<p><code>import time</code></p>
+
+<p>Importa a biblioteca <code>time</code>, que permite fazer pausas no programa.</p>
+
+<p><code>import webbrowser</code></p>
+
+<p>Importa a biblioteca <code>webbrowser</code>, usada para abrir paginas no navegador.</p>
+
+<p><code>import pyautogui</code></p>
+
+<p>Importa o PyAutoGUI, biblioteca que controla mouse, teclado e tela.</p>
+
+<h2 id="teste-deste-bloco">Teste deste bloco</h2>
+
+<p>Salve o arquivo e rode:</p>
+
+<pre><code data-lang="powershell">
+python src/automacao_portal.py
+</code></pre>
+
+<h2 id="resultado-esperado">Resultado esperado</h2>
+
+<p>Nada deve acontecer. Se nao apareceu erro, os imports funcionaram.</p>
+
+<p>---</p>
+
+<h2 id="4-3-segundo-bloco-criar-configuracoes-fixas">4.3 - Segundo bloco: criar configuracoes fixas</h2>
+
+<p>Adicione abaixo dos imports:</p>
+
+<pre><code data-lang="python">
+EMAIL = &quot;coordenacao@colegiocaminhosfuturo.local&quot;
+SENHA = &quot;Demo@2026&quot;
+
+pasta_projeto = Path(__file__).resolve().parent.parent
+portal_login = pasta_projeto / &quot;portal_simulado&quot; / &quot;login.html&quot;
+pasta_prints = pasta_projeto / &quot;saidas&quot; / &quot;prints&quot;
+</code></pre>
+
+<h2 id="explicacao-linha-por-linha">Explicacao linha por linha</h2>
+
+<p><code>EMAIL = &quot;coordenacao@colegiocaminhosfuturo.local&quot;</code></p>
+
+<p>Guarda o email ficticio em uma variavel. Assim voce nao precisa digitar o email varias vezes no codigo.</p>
+
+<p><code>SENHA = &quot;Demo@2026&quot;</code></p>
+
+<p>Guarda a senha ficticia em uma variavel.</p>
+
+<p><code>pasta_projeto = Path(__file__).resolve().parent.parent</code></p>
+
+<p>Descobre automaticamente a pasta principal do projeto.</p>
+
+<p><code>__file__</code></p>
+
+<p>Representa o caminho do arquivo atual, neste caso <code>automacao_portal.py</code>.</p>
+
+<p><code>.resolve()</code></p>
+
+<p>Transforma o caminho em caminho completo.</p>
+
+<p><code>.parent</code></p>
+
+<p>Sobe uma pasta. Como o arquivo esta dentro de <code>src</code>, o primeiro <code>parent</code> chega em <code>src</code>.</p>
+
+<p><code>.parent.parent</code></p>
+
+<p>Sobe mais uma pasta. Assim chegamos na pasta principal do projeto.</p>
+
+<p><code>portal_login = pasta_projeto / &quot;portal_simulado&quot; / &quot;login.html&quot;</code></p>
+
+<p>Monta o caminho ate a pagina de login do portal.</p>
+
+<p><code>pasta_prints = pasta_projeto / &quot;saidas&quot; / &quot;prints&quot;</code></p>
+
+<p>Monta o caminho onde os prints da automacao serao salvos.</p>
+
+<h2 id="teste-deste-bloco">Teste deste bloco</h2>
+
+<p>Adicione temporariamente no final do arquivo:</p>
+
+<pre><code data-lang="python">
+print(portal_login)
+print(pasta_prints)
+</code></pre>
+
+<p>Rode:</p>
+
+<pre><code data-lang="powershell">
+python src/automacao_portal.py
+</code></pre>
+
+<h2 id="resultado-esperado">Resultado esperado</h2>
+
+<p>O terminal mostra caminhos parecidos com:</p>
+
+<pre><code data-lang="text">
+...\automacao-dashboard-boletim-escolar\portal_simulado\login.html
+...\automacao-dashboard-boletim-escolar\saidas\prints
+</code></pre>
+
+<p>Depois do teste, apague as duas linhas:</p>
+
+<pre><code data-lang="python">
+print(portal_login)
+print(pasta_prints)
+</code></pre>
+
+<p>---</p>
+
+<h2 id="4-4-terceiro-bloco-criar-uma-pausa-manual">4.4 - Terceiro bloco: criar uma pausa manual</h2>
+
+<p>Adicione:</p>
+
+<pre><code data-lang="python">
+def esperar(segundos=2):
+    time.sleep(segundos)
+</code></pre>
+
+<h2 id="explicacao-linha-por-linha">Explicacao linha por linha</h2>
+
+<p><code>def esperar(segundos=2):</code></p>
+
+<p>Cria uma funcao chamada <code>esperar</code>. Se voce nao passar nenhum valor, ela usa 2 segundos.</p>
+
+<p><code>time.sleep(segundos)</code></p>
+
+<p>Pausa o programa pela quantidade de segundos informada.</p>
+
+<h2 id="diferenca-entre-esperar-e-pyautogui-pause">Diferenca entre esperar e pyautogui.PAUSE</h2>
+
+<p><code>esperar(2)</code></p>
+
+<p>Pausa exatamente naquele ponto do codigo.</p>
+
+<p><code>pyautogui.PAUSE = 2</code></p>
+
+<p>Faz o PyAutoGUI esperar 2 segundos depois de quase toda acao, como <code>click</code>, <code>write</code> e <code>press</code>.</p>
+
+<h2 id="teste-deste-bloco">Teste deste bloco</h2>
+
+<p>Adicione temporariamente:</p>
+
+<pre><code data-lang="python">
+print(&quot;Antes&quot;)
+esperar(2)
+print(&quot;Depois&quot;)
+</code></pre>
+
+<p>Rode:</p>
+
+<pre><code data-lang="powershell">
+python src/automacao_portal.py
+</code></pre>
+
+<h2 id="resultado-esperado">Resultado esperado</h2>
+
+<p>O terminal mostra <code>Antes</code>, espera 2 segundos e depois mostra <code>Depois</code>.</p>
+
+<p>Apague as linhas de teste depois.</p>
+
+<p>---</p>
+
+<h2 id="4-5-quarto-bloco-abrir-o-portal-no-navegador">4.5 - Quarto bloco: abrir o portal no navegador</h2>
+
+<p>Adicione:</p>
+
+<pre><code data-lang="python">
+def abrir_portal():
+    webbrowser.open(portal_login.as_uri())
+    esperar(3)
+</code></pre>
+
+<h2 id="explicacao-linha-por-linha">Explicacao linha por linha</h2>
+
+<p><code>def abrir_portal():</code></p>
+
+<p>Cria uma funcao chamada <code>abrir_portal</code>.</p>
+
+<p><code>webbrowser.open(portal_login.as_uri())</code></p>
+
+<p>Abre o arquivo <code>login.html</code> no navegador padrao.</p>
+
+<p><code>portal_login.as_uri()</code></p>
+
+<p>Transforma o caminho do arquivo em um formato que o navegador entende, parecido com <code>file:///...</code>.</p>
+
+<p><code>esperar(3)</code></p>
+
+<p>Espera 3 segundos para dar tempo da pagina abrir.</p>
+
+<h2 id="teste-deste-bloco">Teste deste bloco</h2>
+
+<p>No final do arquivo, adicione:</p>
+
+<pre><code data-lang="python">
+abrir_portal()
+</code></pre>
+
+<p>Rode:</p>
+
+<pre><code data-lang="powershell">
+python src/automacao_portal.py
+</code></pre>
+
+<h2 id="resultado-esperado">Resultado esperado</h2>
+
+<p>O navegador abre na tela de login.</p>
+
+<p>Depois do teste, apague:</p>
+
+<pre><code data-lang="python">
+abrir_portal()
+</code></pre>
+
+<p>---</p>
+
+<h2 id="4-6-quinto-bloco-descobrir-a-posicao-do-mouse">4.6 - Quinto bloco: descobrir a posicao do mouse</h2>
+
+<p>Antes de clicar com PyAutoGUI, voce precisa descobrir as coordenadas da tela.</p>
+
+<p>No terminal, rode:</p>
+
+<pre><code data-lang="powershell">
+python
+</code></pre>
+
+<p>Dentro do Python, digite:</p>
+
+<pre><code data-lang="python">
+import pyautogui
+pyautogui.position()
+</code></pre>
+
+<h2 id="como-usar">Como usar</h2>
+
+<p class="numbered">1. Abra o portal no navegador.</p>
+<p class="numbered">2. Coloque o mouse em cima do campo de email.</p>
+<p class="numbered">3. Volte ao terminal sem mover muito o mouse, ou use `Alt + Tab`.</p>
+<p class="numbered">4. Rode:</p>
+
+<pre><code data-lang="python">
+pyautogui.position()
+</code></pre>
+
+<p>Anote o resultado.</p>
+
+<p>Exemplo:</p>
+
+<pre><code data-lang="text">
+Point(x=600, y=360)
+</code></pre>
+
+<p>Repita para:</p>
+
+<p class="bullet">• campo email;</p>
+<p class="bullet">• campo senha;</p>
+<p class="bullet">• botao Entrar;</p>
+<p class="bullet">• botao Baixar CSV.</p>
+
+<p>Para sair do Python:</p>
+
+<pre><code data-lang="python">
+exit()
+</code></pre>
+
+<h2 id="o-que-voce-esta-aprendendo">O que voce esta aprendendo</h2>
+
+<p>O PyAutoGUI trabalha com coordenadas:</p>
+
+<pre><code data-lang="text">
+x = distancia da esquerda para a direita
+y = distancia de cima para baixo
+</code></pre>
+
+<p>Quando voce faz:</p>
+
+<pre><code data-lang="python">
+pyautogui.click(600, 360)
+</code></pre>
+
+<p>O mouse clica no ponto <code>x=600</code>, <code>y=360</code>.</p>
+
+<p>---</p>
+
+<h2 id="4-7-sexto-bloco-testar-um-clique-no-email">4.7 - Sexto bloco: testar um clique no email</h2>
+
+<p>Adicione uma funcao de teste:</p>
+
+<pre><code data-lang="python">
+def testar_clique_email():
+    pyautogui.click(600, 360)
+</code></pre>
+
+<h2 id="explicacao-linha-por-linha">Explicacao linha por linha</h2>
+
+<p><code>def testar_clique_email():</code></p>
+
+<p>Cria uma funcao apenas para testar o clique no campo email.</p>
+
+<p><code>pyautogui.click(600, 360)</code></p>
+
+<p>Clica na coordenada informada. Troque <code>600, 360</code> pelos valores que voce mediu.</p>
+
+<h2 id="teste">Teste</h2>
+
+<p>No final do arquivo, adicione temporariamente:</p>
+
+<pre><code data-lang="python">
+abrir_portal()
+testar_clique_email()
+</code></pre>
+
+<p>Rode:</p>
+
+<pre><code data-lang="powershell">
+python src/automacao_portal.py
+</code></pre>
+
+<h2 id="resultado-esperado">Resultado esperado</h2>
+
+<p>O cursor fica dentro do campo de email.</p>
+
+<p>Se o clique cair errado, ajuste os numeros.</p>
+
+<p>Depois do teste, apague:</p>
+
+<pre><code data-lang="python">
+abrir_portal()
+testar_clique_email()
+</code></pre>
+
+<p>Voce pode apagar tambem a funcao <code>testar_clique_email</code> quando terminar o teste.</p>
+
+<p>---</p>
+
+<h2 id="4-8-setimo-bloco-preencher-email-e-senha">4.8 - Setimo bloco: preencher email e senha</h2>
+
+<p>Agora crie:</p>
+
+<pre><code data-lang="python">
+def fazer_login():
+    pyautogui.click(600, 360)
+    pyautogui.write(EMAIL)
+
+    pyautogui.click(600, 435)
+    pyautogui.write(SENHA)
+
+    pyautogui.click(520, 500)
+    esperar(2)
+</code></pre>
+
+<h2 id="explicacao-linha-por-linha">Explicacao linha por linha</h2>
+
+<p><code>def fazer_login():</code></p>
+
+<p>Cria a funcao responsavel pelo login.</p>
+
+<p><code>pyautogui.click(600, 360)</code></p>
+
+<p>Clica no campo de email. Troque pelos seus valores reais se forem diferentes.</p>
+
+<p><code>pyautogui.write(EMAIL)</code></p>
+
+<p>Digita o valor guardado na variavel <code>EMAIL</code>.</p>
+
+<p><code>pyautogui.click(600, 435)</code></p>
+
+<p>Clica no campo de senha.</p>
+
+<p><code>pyautogui.write(SENHA)</code></p>
+
+<p>Digita o valor guardado na variavel <code>SENHA</code>.</p>
+
+<p><code>pyautogui.click(520, 500)</code></p>
+
+<p>Clica no botao <code>Entrar</code>.</p>
+
+<p><code>esperar(2)</code></p>
+
+<p>Espera 2 segundos para o painel carregar.</p>
+
+<h2 id="teste">Teste</h2>
+
+<p>No final do arquivo, adicione temporariamente:</p>
+
+<pre><code data-lang="python">
+abrir_portal()
+fazer_login()
+</code></pre>
+
+<p>Rode:</p>
+
+<pre><code data-lang="powershell">
+python src/automacao_portal.py
+</code></pre>
+
+<h2 id="resultado-esperado">Resultado esperado</h2>
+
+<p>O navegador abre, preenche email e senha, e entra no painel.</p>
+
+<p>Depois do teste, apague:</p>
+
+<pre><code data-lang="python">
+abrir_portal()
+fazer_login()
+</code></pre>
+
+<p>---</p>
+
+
+<h2>Momento de commit</h2>
+<p>Depois que o login preencher email e senha e entrar no painel, registre essa parte antes de continuar.</p>
+<pre><code data-lang="powershell">git add src/automacao_portal.py
+git commit -m "Automatiza login no portal ficticio"
+git push</code></pre>
+
+<h2 id="4-9-oitavo-bloco-salvar-print-da-tela">4.9 - Oitavo bloco: salvar print da tela</h2>
+
+<p>Adicione:</p>
+
+<pre><code data-lang="python">
+def tirar_print(nome_arquivo):
+    pasta_prints.mkdir(parents=True, exist_ok=True)
+    caminho = pasta_prints / nome_arquivo
+    imagem = pyautogui.screenshot()
+    imagem.save(caminho)
+</code></pre>
+
+<h2 id="explicacao-linha-por-linha">Explicacao linha por linha</h2>
+
+<p><code>def tirar_print(nome_arquivo):</code></p>
+
+<p>Cria uma funcao que recebe o nome do arquivo de print.</p>
+
+<p><code>pasta_prints.mkdir(parents=True, exist_ok=True)</code></p>
+
+<p>Cria a pasta <code>saidas/prints</code>.</p>
+
+<p><code>parents=True</code></p>
+
+<p>Permite criar tambem as pastas anteriores, caso nao existam.</p>
+
+<p><code>exist_ok=True</code></p>
+
+<p>Nao da erro se a pasta ja existir.</p>
+
+<p><code>caminho = pasta_prints / nome_arquivo</code></p>
+
+<p>Monta o caminho completo do arquivo de imagem.</p>
+
+<p><code>imagem = pyautogui.screenshot()</code></p>
+
+<p>Captura a tela atual.</p>
+
+<p><code>imagem.save(caminho)</code></p>
+
+<p>Salva o print no caminho definido.</p>
+
+<h2 id="teste">Teste</h2>
+
+<p>No final do arquivo, adicione temporariamente:</p>
+
+<pre><code data-lang="python">
+abrir_portal()
+tirar_print(&quot;teste_login.png&quot;)
+</code></pre>
+
+<p>Rode:</p>
+
+<pre><code data-lang="powershell">
+python src/automacao_portal.py
+</code></pre>
+
+<h2 id="resultado-esperado">Resultado esperado</h2>
+
+<p>O arquivo aparece em:</p>
+
+<pre><code data-lang="text">
+saidas/prints/teste_login.png
+</code></pre>
+
+<p>Depois apague as linhas de teste.</p>
+
+<p>---</p>
+
+<h2 id="4-10-nono-bloco-abrir-pagina-de-turma">4.10 - Nono bloco: abrir pagina de turma</h2>
+
+<p>Adicione:</p>
+
+<pre><code data-lang="python">
+def abrir_pagina_turma(nome_arquivo_html):
+    caminho = pasta_projeto / &quot;portal_simulado&quot; / nome_arquivo_html
+    webbrowser.open(caminho.as_uri())
+    esperar(2)
+</code></pre>
+
+<h2 id="explicacao-linha-por-linha">Explicacao linha por linha</h2>
+
+<p><code>def abrir_pagina_turma(nome_arquivo_html):</code></p>
+
+<p>Cria uma funcao que recebe o nome de uma pagina, por exemplo <code>6ano.html</code>.</p>
+
+<p><code>caminho = pasta_projeto / &quot;portal_simulado&quot; / nome_arquivo_html</code></p>
+
+<p>Monta o caminho ate a pagina da turma.</p>
+
+<p><code>webbrowser.open(caminho.as_uri())</code></p>
+
+<p>Abre essa pagina no navegador.</p>
+
+<p><code>esperar(2)</code></p>
+
+<p>Espera a pagina carregar.</p>
+
+<h2 id="teste">Teste</h2>
+
+<p>Adicione temporariamente:</p>
+
+<pre><code data-lang="python">
+abrir_pagina_turma(&quot;6ano.html&quot;)
+</code></pre>
+
+<p>Rode:</p>
+
+<pre><code data-lang="powershell">
+python src/automacao_portal.py
+</code></pre>
+
+<h2 id="resultado-esperado">Resultado esperado</h2>
+
+<p>A pagina do 6 ano abre.</p>
+
+<p>Depois apague a linha de teste.</p>
+
+<p>---</p>
+
+<h2 id="4-11-decimo-bloco-clicar-no-botao-baixar-csv">4.11 - Decimo bloco: clicar no botao Baixar CSV</h2>
+
+<p>Adicione:</p>
+
+<pre><code data-lang="python">
+def baixar_csv_da_turma(x, y):
+    pyautogui.click(x, y)
+    esperar(2)
+</code></pre>
+
+<h2 id="explicacao-linha-por-linha">Explicacao linha por linha</h2>
+
+<p><code>def baixar_csv_da_turma(x, y):</code></p>
+
+<p>Cria uma funcao para clicar no botao de baixar CSV usando coordenadas informadas na chamada.</p>
+
+<p><code>pyautogui.click(x, y)</code></p>
+
+<p>Clica no botao <code>Baixar CSV</code>. Troque pelos valores reais da sua tela se necessario.</p>
+
+<p><code>esperar(2)</code></p>
+
+<p>Espera o download iniciar.</p>
+<p>Agora voce pode reutilizar a mesma funcao passando coordenadas diferentes sempre que precisar clicar em outro botao.</p>
+
+
+
+<h2 id="teste">Teste</h2>
+
+<p>Adicione temporariamente:</p>
+
+<pre><code data-lang="python">
+abrir_pagina_turma(&quot;6ano.html&quot;)
+baixar_csv_da_turma(105, 295)
+</code></pre>
+
+<p>Rode:</p>
+
+<pre><code data-lang="powershell">
+python src/automacao_portal.py
+</code></pre>
+
+<h2 id="resultado-esperado">Resultado esperado</h2>
+
+<p>O navegador baixa o CSV do 6 ano e salva um print.</p>
+
+<p>Depois apague as linhas de teste.</p>
+
+<p>---</p>
+
+
+<h2>Momento de commit</h2>
+<p>Depois que voce conseguir baixar o CSV de uma turma, registre o primeiro download automatizado.</p>
+<pre><code data-lang="powershell">git add src/automacao_portal.py
+git commit -m "Automatiza download de CSV de uma turma"
+git push</code></pre>
+
+<h2 id="4-12-bloco-final-juntar-tudo-na-funcao-principal">4.12 - Bloco final: juntar tudo na funcao principal</h2>
+
+<p>Adicione:</p>
+
+<pre><code data-lang="python">
+def executar_automacao():
+    abrir_portal()
+    tirar_print(&quot;01_login_aberto.png&quot;)
+
+    fazer_login()
+    tirar_print(&quot;02_painel_aberto.png&quot;)
+
+    abrir_pagina_turma(&quot;6ano.html&quot;)
+    baixar_csv_da_turma(105, 295)
+
+    abrir_pagina_turma(&quot;7ano.html&quot;)
+    baixar_csv_da_turma(105, 295)
+
+    abrir_pagina_turma(&quot;8ano.html&quot;)
+    baixar_csv_da_turma(105, 295)
+
+    print(&quot;Automacao do portal finalizada.&quot;)
+
+
+if __name__ == &quot;__main__&quot;:
+    executar_automacao()
+</code></pre>
+
+<h2 id="explicacao-linha-por-linha">Explicacao linha por linha</h2>
+
+<p><code>def executar_automacao():</code></p>
+
+<p>Cria a funcao principal da automacao.</p>
+
+<p><code>abrir_portal()</code></p>
+
+<p>Abre a tela de login.</p>
+
+<p><code>tirar_print(&quot;01_login_aberto.png&quot;)</code></p>
+
+<p>Salva um print da tela de login.</p>
+
+<p><code>fazer_login()</code></p>
+
+<p>Preenche email, senha e clica em entrar.</p>
+
+<p><code>tirar_print(&quot;02_painel_aberto.png&quot;)</code></p>
+
+<p>Salva um print do painel.</p>
+
+<p><code>abrir_pagina_turma(&quot;6ano.html&quot;)</code></p>
+
+<p>Abre a pagina do 6 ano.</p>
+
+<p><code>baixar_csv_da_turma(105, 295)</code></p>
+
+<p>Clica em baixar CSV usando as coordenadas informadas.</p>
+
+<p>As linhas do 7 ano e 8 ano repetem a mesma logica.</p>
+
+<p><code>print(&quot;Automacao do portal finalizada.&quot;)</code></p>
+
+<p>Mostra uma mensagem no terminal.</p>
+
+<p><code>if __name__ == &quot;__main__&quot;:</code></p>
+
+<p>Garante que a automacao so rode quando este arquivo for executado diretamente.</p>
+
+<p><code>executar_automacao()</code></p>
+
+<p>Chama a funcao principal.</p>
+
+<h2 id="teste-final-da-etapa">Teste final da etapa</h2>
+
+<p>Rode:</p>
+
+<pre><code data-lang="powershell">
+python src/automacao_portal.py
+</code></pre>
+
+<h2 id="resultado-esperado">Resultado esperado</h2>
+
+<p>O portal abre, o login acontece, os CSVs sao baixados e os prints aparecem em:</p>
+
+<pre><code data-lang="text">
+saidas/prints/
+</code></pre>
+
+<h2 id="momento-de-commit">Momento de commit</h2>
+
+<p>Depois que a automacao funcionar:</p>
+
+<pre><code data-lang="powershell">
+git add src/automacao_portal.py saidas/prints
+git commit -m &quot;Implementa automacao do portal com PyAutoGUI&quot;
+git push
+</code></pre>
+
+<p>Observacao: se sua pasta <code>saidas/</code> estiver no <code>.gitignore</code>, os prints nao entram no commit. Isso e normal.</p>
+
+<p>---</p>
+
+<h1 id="etapa-5-criar-main-py">ETAPA 5 - Criar main.py</h1>
+
+<h2 id="objetivo">Objetivo</h2>
+
+<p>Criar o arquivo principal do projeto.</p>
+
+<h2 id="codigo">Codigo</h2>
+
+<p>Crie <code>main.py</code> na raiz do projeto:</p>
+
+<pre><code data-lang="python">
+from src.automacao_portal import executar_automacao
+
+
+def main():
+    executar_automacao()
+
+
+if __name__ == &quot;__main__&quot;:
+    main()
+</code></pre>
+
+<h2 id="explicacao-linha-por-linha">Explicacao linha por linha</h2>
+
+<p><code>from src.automacao_portal import executar_automacao</code></p>
+
+<p>Importa a funcao <code>executar_automacao</code> do arquivo <code>src/automacao_portal.py</code>.</p>
+
+<p><code>def main():</code></p>
+
+<p>Cria a funcao principal do programa.</p>
+
+<p><code>executar_automacao()</code></p>
+
+<p>Chama a automacao do portal.</p>
+
+<p><code>if __name__ == &quot;__main__&quot;:</code></p>
+
+<p>Verifica se o arquivo esta sendo executado diretamente.</p>
+
+<p><code>main()</code></p>
+
+<p>Executa a funcao principal.</p>
+
+<h2 id="teste">Teste</h2>
+
+<pre><code data-lang="powershell">
+python main.py
+</code></pre>
+
+<h2 id="momento-de-commit">Momento de commit</h2>
+
+<pre><code data-lang="powershell">
+git add main.py
+git commit -m &quot;Adiciona arquivo principal do projeto&quot;
+git push
+</code></pre>
+
+<p>---</p>
+
+<h1 id="etapa-6-ler-csv-do-simulado">ETAPA 6 - Ler CSV do simulado</h1>
+
+<h2 id="objetivo">Objetivo</h2>
+
+<p>Ler os arquivos CSV do simulado e transformar as disciplinas em linhas.</p>
+
+<p>Arquivo:</p>
+
+<pre><code data-lang="text">
+src/leitor_simulados.py
+</code></pre>
+
+<h2 id="codigo-completo">Codigo completo</h2>
+
+<pre><code data-lang="python">
+from pathlib import Path
+
+import pandas as pd
+
+
+pasta_projeto = Path(__file__).resolve().parent.parent
+pasta_simulados = pasta_projeto / &quot;dados&quot; / &quot;simulados&quot;
+
+
+def ler_simulados():
+    arquivos = list(pasta_simulados.glob(&quot;simulado_*.csv&quot;))
+    tabelas = []
+
+    for arquivo in arquivos:
+        tabela = pd.read_csv(arquivo)
+        tabelas.append(tabela)
+
+    if not tabelas:
+        raise FileNotFoundError(&quot;Nenhum arquivo de simulado foi encontrado.&quot;)
+
+    return pd.concat(tabelas, ignore_index=True)
+
+
+def transformar_simulados_para_longo(tabela):
+    return tabela.melt(
+        id_vars=[&quot;turma&quot;, &quot;aluno&quot;],
+        var_name=&quot;disciplina&quot;,
+        value_name=&quot;nota_simulado&quot;,
+    )
+
+
+if __name__ == &quot;__main__&quot;:
+    simulados = ler_simulados()
+    simulados_longos = transformar_simulados_para_longo(simulados)
+    print(simulados_longos.head())
+</code></pre>
+
+<h2 id="explicacao-linha-por-linha">Explicacao linha por linha</h2>
+
+<p><code>from pathlib import Path</code></p>
+
+<p>Importa <code>Path</code> para trabalhar com caminhos.</p>
+
+<p><code>import pandas as pd</code></p>
+
+<p>Importa Pandas com o apelido <code>pd</code>. Esse apelido e padrao na comunidade Python.</p>
+
+<p><code>pasta_projeto = Path(__file__).resolve().parent.parent</code></p>
+
+<p>Descobre a pasta principal do projeto.</p>
+
+<p><code>pasta_simulados = pasta_projeto / &quot;dados&quot; / &quot;simulados&quot;</code></p>
+
+<p>Monta o caminho da pasta onde estao os CSVs.</p>
+
+<p><code>def ler_simulados():</code></p>
+
+<p>Cria uma funcao para ler todos os CSVs.</p>
+
+<p><code>arquivos = list(pasta_simulados.glob(&quot;simulado_*.csv&quot;))</code></p>
+
+<p>Procura todos os arquivos que comecam com <code>simulado_</code> e terminam com <code>.csv</code>.</p>
+
+<p><code>tabelas = []</code></p>
+
+<p>Cria uma lista vazia para guardar as tabelas lidas.</p>
+
+<p><code>for arquivo in arquivos:</code></p>
+
+<p>Percorre cada arquivo encontrado.</p>
+
+<p><code>tabela = pd.read_csv(arquivo)</code></p>
+
+<p>Le o CSV e transforma em DataFrame do Pandas.</p>
+
+<p><code>tabelas.append(tabela)</code></p>
+
+<p>Guarda a tabela na lista.</p>
+
+<p><code>if not tabelas:</code></p>
+
+<p>Verifica se a lista esta vazia.</p>
+
+<p><code>raise FileNotFoundError(...)</code></p>
+
+<p>Mostra erro se nenhum CSV foi encontrado.</p>
+
+<p><code>return pd.concat(tabelas, ignore_index=True)</code></p>
+
+<p>Junta todas as tabelas em uma unica tabela.</p>
+
+<p><code>def transformar_simulados_para_longo(tabela):</code></p>
+
+<p>Cria uma funcao para mudar o formato da tabela.</p>
+
+<p><code>tabela.melt(...)</code></p>
+
+<p>Transforma colunas de disciplinas em linhas.</p>
+
+<p><code>id_vars=[&quot;turma&quot;, &quot;aluno&quot;]</code></p>
+
+<p>Mantem <code>turma</code> e <code>aluno</code> como identificadores.</p>
+
+<p><code>var_name=&quot;disciplina&quot;</code></p>
+
+<p>Nome da nova coluna que vai guardar o nome da disciplina.</p>
+
+<p><code>value_name=&quot;nota_simulado&quot;</code></p>
+
+<p>Nome da nova coluna que vai guardar a nota.</p>
+
+<p><code>if __name__ == &quot;__main__&quot;:</code></p>
+
+<p>Permite testar este arquivo sozinho.</p>
+
+<p><code>simulados = ler_simulados()</code></p>
+
+<p>Le os CSVs.</p>
+
+<p><code>simulados_longos = transformar_simulados_para_longo(simulados)</code></p>
+
+<p>Transforma a tabela para o formato longo.</p>
+
+<p><code>print(simulados_longos.head())</code></p>
+
+<p>Mostra as primeiras linhas.</p>
+
+<h2 id="teste">Teste</h2>
+
+<pre><code data-lang="powershell">
+python src/leitor_simulados.py
+</code></pre>
+
+<h2 id="momento-de-commit">Momento de commit</h2>
+
+<pre><code data-lang="powershell">
+git add src/leitor_simulados.py
+git commit -m &quot;Adiciona leitor dos simulados em CSV&quot;
+git push
+</code></pre>
+
+<p>---</p>
+
+
+<h2>Momento de commit</h2>
+<p>Depois que o leitor de simulados funcionar e mostrar a tabela no terminal, registre essa etapa.</p>
+<pre><code data-lang="powershell">git add src/leitor_simulados.py
+git commit -m "Le e transforma dados dos simulados"
+git push</code></pre>
+
+<h1 id="etapa-7-ler-excel-das-provas">ETAPA 7 - Ler Excel das provas</h1>
+
+<h2 id="objetivo">Objetivo</h2>
+
+<p>Ler os arquivos Excel de provas e transformar as disciplinas em linhas.</p>
+
+<p>Arquivo:</p>
+
+<pre><code data-lang="text">
+src/leitor_provas.py
+</code></pre>
+
+<h2 id="codigo-completo">Codigo completo</h2>
+
+<pre><code data-lang="python">
+from pathlib import Path
+
+import pandas as pd
+
+
+pasta_projeto = Path(__file__).resolve().parent.parent
+pasta_provas = pasta_projeto / &quot;dados&quot; / &quot;provas&quot;
+
+
+def ler_provas():
+    arquivos = list(pasta_provas.glob(&quot;provas_*.xlsx&quot;))
+    tabelas = []
+
+    for arquivo in arquivos:
+        tabela = pd.read_excel(arquivo, sheet_name=&quot;Notas das Provas&quot;)
+        tabelas.append(tabela)
+
+    if not tabelas:
+        raise FileNotFoundError(&quot;Nenhum arquivo de provas foi encontrado.&quot;)
+
+    return pd.concat(tabelas, ignore_index=True)
+
+
+def transformar_provas_para_longo(tabela):
+    return tabela.melt(
+        id_vars=[&quot;turma&quot;, &quot;aluno&quot;],
+        var_name=&quot;disciplina&quot;,
+        value_name=&quot;nota_prova&quot;,
+    )
+
+
+if __name__ == &quot;__main__&quot;:
+    provas = ler_provas()
+    provas_longas = transformar_provas_para_longo(provas)
+    print(provas_longas.head())
+</code></pre>
+
+<h2 id="explicacao-das-principais-linhas">Explicacao das principais linhas</h2>
+
+<p><code>pasta_provas = pasta_projeto / &quot;dados&quot; / &quot;provas&quot;</code></p>
+
+<p>Define onde os arquivos Excel estao.</p>
+
+<p><code>pasta_provas.glob(&quot;provas_*.xlsx&quot;)</code></p>
+
+<p>Procura arquivos como <code>provas_6ano.xlsx</code>, <code>provas_7ano.xlsx</code> e <code>provas_8ano.xlsx</code>.</p>
+
+<p><code>pd.read_excel(arquivo, sheet_name=&quot;Notas das Provas&quot;)</code></p>
+
+<p>Le a aba <code>Notas das Provas</code> de cada Excel.</p>
+
+<p><code>tabela.melt(...)</code></p>
+
+<p>Transforma as colunas das disciplinas em linhas, deixando a tabela pronta para juntar com as outras notas.</p>
+
+<h2 id="teste">Teste</h2>
+
+<pre><code data-lang="powershell">
+python src/leitor_provas.py
+</code></pre>
+
+<h2 id="momento-de-commit">Momento de commit</h2>
+
+<pre><code data-lang="powershell">
+git add src/leitor_provas.py
+git commit -m &quot;Adiciona leitor das provas em Excel&quot;
+git push
+</code></pre>
+
+<p>---</p>
+
+
+<h2>Momento de commit</h2>
+<p>Depois que o leitor de provas funcionar com os arquivos Excel, registre essa etapa.</p>
+<pre><code data-lang="powershell">git add src/leitor_provas.py
+git commit -m "Le e transforma notas de provas"
+git push</code></pre>
+
+<h1 id="etapa-8-ler-pdf-do-projeto-pedagogico">ETAPA 8 - Ler PDF do projeto pedagogico</h1>
+
+<h2 id="objetivo">Objetivo</h2>
+
+<p>Extrair a tabela dos PDFs do projeto pedagogico.</p>
+
+<p>Arquivo:</p>
+
+<pre><code data-lang="text">
+src/leitor_projetos.py
+</code></pre>
+
+<h2 id="codigo-completo">Codigo completo</h2>
+
+<pre><code data-lang="python">
+from pathlib import Path
+
+import pandas as pd
+import pdfplumber
+
+
+pasta_projeto = Path(__file__).resolve().parent.parent
+pasta_projetos = pasta_projeto / &quot;dados&quot; / &quot;projetos&quot;
+
+
+def ler_um_pdf(caminho_pdf):
+    linhas = []
+
+    with pdfplumber.open(caminho_pdf) as pdf:
+        for pagina in pdf.pages:
+            tabelas = pagina.extract_tables()
+            for tabela in tabelas:
+                linhas.extend(tabela)
+
+    if not linhas:
+        raise ValueError(f&quot;Nenhuma tabela encontrada em {caminho_pdf.name}&quot;)
+
+    cabecalho = linhas[0]
+    dados = linhas[1:]
+    return pd.DataFrame(dados, columns=cabecalho)
+
+
+def ler_projetos():
+    arquivos = list(pasta_projetos.glob(&quot;projeto_*.pdf&quot;))
+    tabelas = []
+
+    for arquivo in arquivos:
+        tabela = ler_um_pdf(arquivo)
+        tabelas.append(tabela)
+
+    if not tabelas:
+        raise FileNotFoundError(&quot;Nenhum PDF de projeto foi encontrado.&quot;)
+
+    return pd.concat(tabelas, ignore_index=True)
+
+
+def transformar_projetos_para_longo(tabela):
+    tabela = tabela.rename(columns={&quot;Turma&quot;: &quot;turma&quot;, &quot;Aluno&quot;: &quot;aluno&quot;})
+
+    return tabela.melt(
+        id_vars=[&quot;turma&quot;, &quot;aluno&quot;],
+        var_name=&quot;disciplina&quot;,
+        value_name=&quot;nota_projeto&quot;,
+    )
+
+
+if __name__ == &quot;__main__&quot;:
+    projetos = ler_projetos()
+    projetos_longos = transformar_projetos_para_longo(projetos)
+    print(projetos_longos.head())
+</code></pre>
+
+<h2 id="explicacao-das-principais-linhas">Explicacao das principais linhas</h2>
+
+<p><code>import pdfplumber</code></p>
+
+<p>Importa a biblioteca que consegue extrair texto e tabelas de PDF.</p>
+
+<p><code>with pdfplumber.open(caminho_pdf) as pdf:</code></p>
+
+<p>Abre o PDF de forma segura. Quando o bloco termina, o arquivo e fechado automaticamente.</p>
+
+<p><code>for pagina in pdf.pages:</code></p>
+
+<p>Percorre as paginas do PDF.</p>
+
+<p><code>tabelas = pagina.extract_tables()</code></p>
+
+<p>Tenta extrair tabelas da pagina.</p>
+
+<p><code>linhas.extend(tabela)</code></p>
+
+<p>Adiciona todas as linhas encontradas na lista <code>linhas</code>.</p>
+
+<p><code>cabecalho = linhas[0]</code></p>
+
+<p>Pega a primeira linha como cabecalho.</p>
+
+<p><code>dados = linhas[1:]</code></p>
+
+<p>Pega as demais linhas como dados.</p>
+
+<p><code>pd.DataFrame(dados, columns=cabecalho)</code></p>
+
+<p>Cria uma tabela Pandas usando o cabecalho extraido.</p>
+
+<p><code>tabela.rename(columns={&quot;Turma&quot;: &quot;turma&quot;, &quot;Aluno&quot;: &quot;aluno&quot;})</code></p>
+
+<p>Padroniza os nomes das colunas para ficarem iguais aos outros arquivos.</p>
+
+<h2 id="teste">Teste</h2>
+
+<pre><code data-lang="powershell">
+python src/leitor_projetos.py
+</code></pre>
+
+<h2 id="momento-de-commit">Momento de commit</h2>
+
+<pre><code data-lang="powershell">
+git add src/leitor_projetos.py
+git commit -m &quot;Adiciona leitor dos projetos em PDF&quot;
+git push
+</code></pre>
+
+<p>---</p>
+
+
+<h2>Momento de commit</h2>
+<p>Depois que o leitor de PDFs funcionar, registre o fim da etapa de entrada de dados.</p>
+<pre><code data-lang="powershell">git add src/leitor_projetos.py
+git commit -m "Extrai notas do projeto pedagogico em PDF"
+git push</code></pre>
+
+<h1 id="etapa-9-consolidar-notas-e-calcular-medias">ETAPA 9 - Consolidar notas e calcular medias</h1>
+
+<h2 id="objetivo">Objetivo</h2>
+
+<p>Juntar simulado, prova e projeto em uma tabela final.</p>
+
+<p>Arquivo:</p>
+
+<pre><code data-lang="text">
+src/consolidacao.py
+</code></pre>
+
+<h2 id="codigo-completo">Codigo completo</h2>
+
+<pre><code data-lang="python">
+from pathlib import Path
+
+from src.leitor_projetos import ler_projetos, transformar_projetos_para_longo
+from src.leitor_provas import ler_provas, transformar_provas_para_longo
+from src.leitor_simulados import ler_simulados, transformar_simulados_para_longo
+
+
+pasta_projeto = Path(__file__).resolve().parent.parent
+pasta_relatorios = pasta_projeto / &quot;saidas&quot; / &quot;relatorios&quot;
+
+
+def consolidar_notas():
+    simulados = transformar_simulados_para_longo(ler_simulados())
+    provas = transformar_provas_para_longo(ler_provas())
+    projetos = transformar_projetos_para_longo(ler_projetos())
+
+    tabela = simulados.merge(
+        provas,
+        on=[&quot;turma&quot;, &quot;aluno&quot;, &quot;disciplina&quot;],
+        how=&quot;inner&quot;,
+    )
+
+    tabela = tabela.merge(
+        projetos,
+        on=[&quot;turma&quot;, &quot;aluno&quot;, &quot;disciplina&quot;],
+        how=&quot;inner&quot;,
+    )
+
+    tabela[&quot;nota_simulado&quot;] = tabela[&quot;nota_simulado&quot;].astype(float)
+    tabela[&quot;nota_prova&quot;] = tabela[&quot;nota_prova&quot;].astype(float)
+    tabela[&quot;nota_projeto&quot;] = tabela[&quot;nota_projeto&quot;].astype(float)
+
+    tabela[&quot;nota_projeto_convertida&quot;] = tabela[&quot;nota_projeto&quot;] * 2
+
+    tabela[&quot;media&quot;] = (
+        tabela[&quot;nota_simulado&quot;] * 10
+        + tabela[&quot;nota_prova&quot;] * 10
+        + tabela[&quot;nota_projeto_convertida&quot;] * 5
+    ) / 25
+
+    tabela[&quot;media&quot;] = tabela[&quot;media&quot;].round(1)
+    tabela[&quot;situacao&quot;] = tabela[&quot;media&quot;].apply(
+        lambda media: &quot;Aprovado&quot; if media &gt;= 6 else &quot;Recuperacao&quot;
+    )
+
+    return tabela
+
+
+def salvar_relatorio_final(tabela):
+    pasta_relatorios.mkdir(parents=True, exist_ok=True)
+    caminho = pasta_relatorios / &quot;notas_consolidadas.csv&quot;
+    tabela.to_csv(caminho, index=False, encoding=&quot;utf-8-sig&quot;)
+    return caminho
+
+
+if __name__ == &quot;__main__&quot;:
+    notas = consolidar_notas()
+    caminho = salvar_relatorio_final(notas)
+    print(notas.head())
+    print(f&quot;Relatorio salvo em: {caminho}&quot;)
+</code></pre>
+
+<h2 id="explicacao-das-principais-linhas">Explicacao das principais linhas</h2>
+
+<p>As linhas <code>from src... import ...</code> importam funcoes criadas nas etapas anteriores.</p>
+
+<p><code>simulados = transformar_simulados_para_longo(ler_simulados())</code></p>
+
+<p>Le os simulados e ja transforma para formato longo.</p>
+
+<p><code>merge(...)</code></p>
+
+<p>Junta tabelas usando colunas em comum.</p>
+
+<p><code>on=[&quot;turma&quot;, &quot;aluno&quot;, &quot;disciplina&quot;]</code></p>
+
+<p>Diz que a juncao deve acontecer quando turma, aluno e disciplina forem iguais.</p>
+
+<p><code>how=&quot;inner&quot;</code></p>
+
+<p>Mantem apenas registros que existem nas duas tabelas.</p>
+
+<p><code>astype(float)</code></p>
+
+<p>Converte notas para numeros decimais.</p>
+
+<p><code>nota_projeto_convertida = nota_projeto * 2</code></p>
+
+<p>Converte projeto da escala 0 a 5 para escala 0 a 10.</p>
+
+<p><code>media = (...) / 25</code></p>
+
+<p>Calcula a media ponderada. Os pesos somam 25.</p>
+
+<p><code>round(1)</code></p>
+
+<p>Arredonda para uma casa decimal.</p>
+
+<p><code>lambda media: &quot;Aprovado&quot; if media &gt;= 6 else &quot;Recuperacao&quot;</code></p>
+
+<p>Cria a situacao do aluno usando uma regra simples.</p>
+
+<p><code>to_csv(...)</code></p>
+
+<p>Salva a tabela consolidada em CSV.</p>
+
+<h2 id="teste">Teste</h2>
+
+<pre><code data-lang="powershell">
+python src/consolidacao.py
+</code></pre>
+
+<h2 id="resultado-esperado">Resultado esperado</h2>
+
+<p>Arquivo criado:</p>
+
+<pre><code data-lang="text">
+saidas/relatorios/notas_consolidadas.csv
+</code></pre>
+
+<h2 id="momento-de-commit">Momento de commit</h2>
+
+<pre><code data-lang="powershell">
+git add src/consolidacao.py
+git commit -m &quot;Consolida notas e calcula medias&quot;
+git push
+</code></pre>
+
+<p>---</p>
+
+<h1 id="etapa-10-gerar-boletins-em-html">ETAPA 10 - Gerar boletins em HTML</h1>
+
+<h2 id="objetivo">Objetivo</h2>
+
+<p>Gerar um boletim individual para cada aluno.</p>
+
+<p>Arquivo:</p>
+
+<pre><code data-lang="text">
+src/boletins.py
+</code></pre>
+
+<h2 id="o-que-este-arquivo-faz">O que este arquivo faz</h2>
+
+<p class="numbered">1. chama a consolidacao;</p>
+<p class="numbered">2. separa a tabela por aluno;</p>
+<p class="numbered">3. monta um HTML para cada aluno;</p>
+<p class="numbered">4. salva em `saidas/boletins`.</p>
+
+<h2 id="codigo-completo">Codigo completo</h2>
+
+<p>Use o codigo desta etapa somente depois que a etapa 9 estiver funcionando.</p>
+
+<pre><code data-lang="python">
+from pathlib import Path
+import re
+
+from src.consolidacao import consolidar_notas
+
+
+pasta_projeto = Path(__file__).resolve().parent.parent
+pasta_boletins = pasta_projeto / &quot;saidas&quot; / &quot;boletins&quot;
+
+
+def limpar_nome_arquivo(texto):
+    texto = texto.lower()
+    texto = re.sub(r&quot;[^a-z0-9]+&quot;, &quot;_&quot;, texto)
+    return texto.strip(&quot;_&quot;)
+
+
+def gerar_boletins():
+    notas = consolidar_notas()
+    pasta_boletins.mkdir(parents=True, exist_ok=True)
+
+    for (turma, aluno), tabela_aluno in notas.groupby([&quot;turma&quot;, &quot;aluno&quot;]):
+        nome = limpar_nome_arquivo(f&quot;{turma}_{aluno}&quot;) + &quot;.html&quot;
+        caminho = pasta_boletins / nome
+
+        linhas = &quot;&quot;
+        for _, linha in tabela_aluno.iterrows():
+            linhas += f&quot;&quot;&quot;
+            &lt;tr&gt;
+                &lt;td&gt;{linha[&#x27;disciplina&#x27;]}&lt;/td&gt;
+                &lt;td&gt;{linha[&#x27;nota_simulado&#x27;]}&lt;/td&gt;
+                &lt;td&gt;{linha[&#x27;nota_prova&#x27;]}&lt;/td&gt;
+                &lt;td&gt;{linha[&#x27;nota_projeto&#x27;]}&lt;/td&gt;
+                &lt;td&gt;{linha[&#x27;media&#x27;]}&lt;/td&gt;
+                &lt;td&gt;{linha[&#x27;situacao&#x27;]}&lt;/td&gt;
+            &lt;/tr&gt;
+            &quot;&quot;&quot;
+
+        html = f&quot;&quot;&quot;
+        &lt;!doctype html&gt;
+        &lt;html lang=&quot;pt-br&quot;&gt;
+        &lt;head&gt;
+            &lt;meta charset=&quot;utf-8&quot;&gt;
+            &lt;title&gt;Boletim - {aluno}&lt;/title&gt;
+        &lt;/head&gt;
+        &lt;body&gt;
+            &lt;h1&gt;Boletim Escolar - 2 Bimestre&lt;/h1&gt;
+            &lt;p&gt;&lt;strong&gt;Aluno:&lt;/strong&gt; {aluno}&lt;/p&gt;
+            &lt;p&gt;&lt;strong&gt;Turma:&lt;/strong&gt; {turma}&lt;/p&gt;
+            &lt;table border=&quot;1&quot; cellpadding=&quot;6&quot;&gt;
+                &lt;tr&gt;
+                    &lt;th&gt;Disciplina&lt;/th&gt;
+                    &lt;th&gt;Simulado&lt;/th&gt;
+                    &lt;th&gt;Prova&lt;/th&gt;
+                    &lt;th&gt;Projeto&lt;/th&gt;
+                    &lt;th&gt;Media&lt;/th&gt;
+                    &lt;th&gt;Situacao&lt;/th&gt;
+                &lt;/tr&gt;
+                {linhas}
+            &lt;/table&gt;
+        &lt;/body&gt;
+        &lt;/html&gt;
+        &quot;&quot;&quot;
+
+        caminho.write_text(html, encoding=&quot;utf-8&quot;)
+
+    print(f&quot;Boletins gerados em: {pasta_boletins}&quot;)
+
+
+if __name__ == &quot;__main__&quot;:
+    gerar_boletins()
+</code></pre>
+
+<h2 id="explicacao-das-principais-linhas">Explicacao das principais linhas</h2>
+
+<p><code>import re</code></p>
+
+<p>Importa expressoes regulares, usadas para limpar nomes de arquivos.</p>
+
+<p><code>limpar_nome_arquivo</code></p>
+
+<p>Funcao que transforma nomes de alunos em nomes seguros para arquivos.</p>
+
+<p><code>notas.groupby([&quot;turma&quot;, &quot;aluno&quot;])</code></p>
+
+<p>Agrupa a tabela por turma e aluno.</p>
+
+<p><code>iterrows()</code></p>
+
+<p>Percorre as linhas da tabela de um aluno.</p>
+
+<p><code>linhas += f&quot;&quot;&quot;...&quot;&quot;&quot;</code></p>
+
+<p>Monta linhas HTML dinamicamente.</p>
+
+<p><code>caminho.write_text(html, encoding=&quot;utf-8&quot;)</code></p>
+
+<p>Salva o boletim em arquivo HTML.</p>
+
+<h2 id="teste">Teste</h2>
+
+<pre><code data-lang="powershell">
+python src/boletins.py
+</code></pre>
+
+<h2 id="momento-de-commit">Momento de commit</h2>
+
+<pre><code data-lang="powershell">
+git add src/boletins.py
+git commit -m &quot;Gera boletins individuais em HTML&quot;
+git push
+</code></pre>
+
+<p>---</p>
+
+<h1 id="etapa-11-criar-dashboard-com-streamlit">ETAPA 11 - Criar dashboard com Streamlit</h1>
+
+<h2 id="objetivo">Objetivo</h2>
+
+<p>Criar um painel interativo com indicadores da turma.</p>
+
+<p>Arquivo:</p>
+
+<pre><code data-lang="text">
+dashboard.py
+</code></pre>
+
+<h2 id="codigo-completo">Codigo completo</h2>
+
+<pre><code data-lang="python">
+import plotly.express as px
+import streamlit as st
+
+from src.consolidacao import consolidar_notas
+
+
+st.set_page_config(page_title=&quot;Dashboard de Boletins&quot;, layout=&quot;wide&quot;)
+
+st.title(&quot;Dashboard de Boletins Escolares&quot;)
+st.caption(&quot;Colegio Caminhos do Futuro - dados ficticios&quot;)
+
+notas = consolidar_notas()
+
+turmas = sorted(notas[&quot;turma&quot;].unique())
+turma_selecionada = st.sidebar.selectbox(&quot;Turma&quot;, turmas)
+
+dados = notas[notas[&quot;turma&quot;] == turma_selecionada]
+
+media_geral = dados[&quot;media&quot;].mean()
+total_alunos = dados[&quot;aluno&quot;].nunique()
+percentual_recuperacao = dados[&quot;situacao&quot;].eq(&quot;Recuperacao&quot;).mean() * 100
+
+col1, col2, col3 = st.columns(3)
+col1.metric(&quot;Media geral&quot;, f&quot;{media_geral:.1f}&quot;)
+col2.metric(&quot;Total de alunos&quot;, total_alunos)
+col3.metric(&quot;% em recuperacao&quot;, f&quot;{percentual_recuperacao:.1f}%&quot;)
+
+media_disciplina = (
+    dados.groupby(&quot;disciplina&quot;, as_index=False)[&quot;media&quot;]
+    .mean()
+    .sort_values(&quot;media&quot;, ascending=False)
+)
+
+fig = px.bar(
+    media_disciplina,
+    x=&quot;disciplina&quot;,
+    y=&quot;media&quot;,
+    title=&quot;Media por disciplina&quot;,
+    text_auto=&quot;.1f&quot;,
+)
+
+st.plotly_chart(fig, use_container_width=True)
+
+st.subheader(&quot;Alunos em recuperacao&quot;)
+recuperacao = dados[dados[&quot;situacao&quot;] == &quot;Recuperacao&quot;]
+st.dataframe(recuperacao[[&quot;aluno&quot;, &quot;disciplina&quot;, &quot;media&quot;]], use_container_width=True)
+</code></pre>
+
+<h2 id="explicacao-das-principais-linhas">Explicacao das principais linhas</h2>
+
+<p><code>import plotly.express as px</code></p>
+
+<p>Importa o Plotly Express, usado para criar graficos rapidamente.</p>
+
+<p><code>import streamlit as st</code></p>
+
+<p>Importa Streamlit, usado para montar o dashboard.</p>
+
+<p><code>st.set_page_config(...)</code></p>
+
+<p>Configura titulo e largura da pagina.</p>
+
+<p><code>st.title(...)</code></p>
+
+<p>Cria o titulo principal.</p>
+
+<p><code>notas = consolidar_notas()</code></p>
+
+<p>Carrega os dados consolidados.</p>
+
+<p><code>notas[&quot;turma&quot;].unique()</code></p>
+
+<p>Pega a lista de turmas sem repetir.</p>
+
+<p><code>st.sidebar.selectbox(&quot;Turma&quot;, turmas)</code></p>
+
+<p>Cria um seletor de turma na lateral.</p>
+
+<p><code>dados = notas[notas[&quot;turma&quot;] == turma_selecionada]</code></p>
+
+<p>Filtra os dados da turma escolhida.</p>
+
+<p><code>dados[&quot;media&quot;].mean()</code></p>
+
+<p>Calcula a media geral.</p>
+
+<p><code>dados[&quot;aluno&quot;].nunique()</code></p>
+
+<p>Conta alunos sem repetir.</p>
+
+<p><code>eq(&quot;Recuperacao&quot;).mean() * 100</code></p>
+
+<p>Calcula o percentual de registros em recuperacao.</p>
+
+<p><code>st.columns(3)</code></p>
+
+<p>Cria tres colunas de indicadores.</p>
+
+<p><code>px.bar(...)</code></p>
+
+<p>Cria grafico de barras.</p>
+
+<p><code>st.plotly_chart(...)</code></p>
+
+<p>Mostra o grafico no Streamlit.</p>
+
+<p><code>st.dataframe(...)</code></p>
+
+<p>Mostra uma tabela interativa.</p>
+
+<h2 id="como-executar">Como executar</h2>
+
+<pre><code data-lang="powershell">
+streamlit run dashboard.py
+</code></pre>
+
+<h2 id="momento-de-commit">Momento de commit</h2>
+
+<pre><code data-lang="powershell">
+git add dashboard.py
+git commit -m &quot;Cria dashboard interativo com Streamlit&quot;
+git push
+</code></pre>
+
+<p>---</p>
+
+<h1 id="etapa-12-atualizar-main-py-para-rodar-o-fluxo">ETAPA 12 - Atualizar main.py para rodar o fluxo</h1>
+
+<h2 id="objetivo">Objetivo</h2>
+
+<p>Fazer o <code>main.py</code> executar as partes principais.</p>
+
+<h2 id="codigo">Codigo</h2>
+
+<pre><code data-lang="python">
+from src.automacao_portal import executar_automacao
+from src.boletins import gerar_boletins
+from src.consolidacao import consolidar_notas, salvar_relatorio_final
+
+
+def main():
+    print(&quot;Iniciando automacao do portal...&quot;)
+    executar_automacao()
+
+    print(&quot;Consolidando notas...&quot;)
+    notas = consolidar_notas()
+    salvar_relatorio_final(notas)
+
+    print(&quot;Gerando boletins...&quot;)
+    gerar_boletins()
+
+    print(&quot;Projeto finalizado.&quot;)
+
+
+if __name__ == &quot;__main__&quot;:
+    main()
+</code></pre>
+
+<h2 id="explicacao-linha-por-linha">Explicacao linha por linha</h2>
+
+<p><code>from src.automacao_portal import executar_automacao</code></p>
+
+<p>Importa a automacao do portal.</p>
+
+<p><code>from src.boletins import gerar_boletins</code></p>
+
+<p>Importa a funcao que gera boletins.</p>
+
+<p><code>from src.consolidacao import consolidar_notas, salvar_relatorio_final</code></p>
+
+<p>Importa as funcoes de consolidacao e salvamento.</p>
+
+<p><code>def main():</code></p>
+
+<p>Cria a funcao principal.</p>
+
+<p><code>print(...)</code></p>
+
+<p>Mostra mensagens para voce acompanhar o que esta acontecendo.</p>
+
+<p><code>executar_automacao()</code></p>
+
+<p>Executa a automacao visual.</p>
+
+<p><code>notas = consolidar_notas()</code></p>
+
+<p>Cria a tabela final de notas.</p>
+
+<p><code>salvar_relatorio_final(notas)</code></p>
+
+<p>Salva o CSV consolidado.</p>
+
+<p><code>gerar_boletins()</code></p>
+
+<p>Gera os boletins HTML.</p>
+
+<p><code>if __name__ == &quot;__main__&quot;:</code></p>
+
+<p>Garante que <code>main()</code> rode apenas quando o arquivo for executado diretamente.</p>
+
+<h2 id="teste">Teste</h2>
+
+<pre><code data-lang="powershell">
+python main.py
+</code></pre>
+
+<h2 id="momento-de-commit">Momento de commit</h2>
+
+<pre><code data-lang="powershell">
+git add main.py
+git commit -m &quot;Integra fluxo principal do projeto&quot;
+git push
+</code></pre>
+
+<p>---</p>
+
+<h1 id="etapa-13-atualizar-readme">ETAPA 13 - Atualizar README</h1>
+
+<h2 id="objetivo">Objetivo</h2>
+
+<p>Deixar o GitHub apresentavel.</p>
+
+<h2 id="o-que-explicar">O que explicar</h2>
+
+<p>No <code>README.md</code>, explique:</p>
+
+<p class="bullet">• problema resolvido;</p>
+<p class="bullet">• que a escola e ficticia;</p>
+<p class="bullet">• que o portal e local e simulado;</p>
+<p class="bullet">• tecnologias usadas;</p>
+<p class="bullet">• como instalar;</p>
+<p class="bullet">• como executar;</p>
+<p class="bullet">• estrutura de pastas;</p>
+<p class="bullet">• proximas melhorias.</p>
+
+<h2 id="momento-de-commit">Momento de commit</h2>
+
+<pre><code data-lang="powershell">
+git add README.md GUIA_PASSO_A_PASSO.md GUIA_PASSO_A_PASSO.html
+git commit -m &quot;Atualiza documentacao do projeto&quot;
+git push
+</code></pre>
+
+<p>---</p>
+
+<p><strong>Dica:</strong> commits pequenos deixam seu historico mais didatico. Cada commit deve representar uma parte que voce testou e entendeu.</p>
+<h1 id="resumo-dos-commits-sugeridos">Resumo dos commits sugeridos</h1>
+
+<pre><code data-lang="text">
+Cria estrutura inicial do projeto
+Implementa automacao do portal com PyAutoGUI
+Adiciona arquivo principal do projeto
+Adiciona leitor dos simulados em CSV
+Adiciona leitor das provas em Excel
+Adiciona leitor dos projetos em PDF
+Consolida notas e calcula medias
+Gera boletins individuais em HTML
+Cria dashboard interativo com Streamlit
+Integra fluxo principal do projeto
+Atualiza documentacao do projeto
+</code></pre>
+
+<p>---</p>
+
+<h1 id="como-estudar-com-este-tutorial">Como estudar com este tutorial</h1>
+
+<p>Nao tente fazer tudo de uma vez.</p>
+
+<p>Faca assim:</p>
+
+<p class="numbered">1. Leia o objetivo da etapa.</p>
+<p class="numbered">2. Digite ou cole apenas o bloco pedido.</p>
+<p class="numbered">3. Leia a explicacao linha por linha.</p>
+<p class="numbered">4. Rode o teste.</p>
+<p class="numbered">5. Corrija o erro se aparecer.</p>
+<p class="numbered">6. So avance quando funcionar.</p>
+<p class="numbered">7. Faça commit nos momentos indicados.</p>
+
+<p>Esse projeto e um laboratorio. O objetivo nao e apenas terminar, e entender o caminho.</p>
+    </main>
+  </div>
+  <script>
+    function toggleSidebar() {
+      document.body.classList.toggle('sidebar-collapsed');
+    }
+  </script>
+</body>
+</html>
