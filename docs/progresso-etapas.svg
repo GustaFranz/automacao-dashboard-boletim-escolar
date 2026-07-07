@@ -1,0 +1,84 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="118" viewBox="0 0 760 118" role="img" aria-label="Progresso das etapas do projeto">
+  <defs>
+    <style>
+      .titulo { font: 600 11px Segoe UI, Arial, sans-serif; fill: #111827; }
+      .subtitulo { font: 400 9px Segoe UI, Arial, sans-serif; fill: #6b7280; }
+      .centro { font: 700 12px Segoe UI, Arial, sans-serif; fill: #111827; }
+      .centro-claro { font: 600 11px Segoe UI, Arial, sans-serif; fill: #9ca3af; }
+    </style>
+  </defs>
+
+  <!-- Etapa 1 - concluída -->
+  <g transform="translate(47,36)">
+    <circle r="26" fill="none" stroke="#e5e7eb" stroke-width="5"/>
+    <circle r="26" fill="none" stroke="#0d9488" stroke-width="5" stroke-linecap="round"
+            stroke-dasharray="163.36" stroke-dashoffset="0" transform="rotate(-90)"/>
+    <text class="centro" text-anchor="middle" dy="5">&#10003;</text>
+  </g>
+  <text class="titulo" x="47" y="82" text-anchor="middle">1_Dados</text>
+  <text class="subtitulo" x="47" y="96" text-anchor="middle">Mapear fontes de notas</text>
+
+  <!-- Etapa 2 - concluída -->
+  <g transform="translate(142,36)">
+    <circle r="26" fill="none" stroke="#e5e7eb" stroke-width="5"/>
+    <circle r="26" fill="none" stroke="#0d9488" stroke-width="5" stroke-linecap="round"
+            stroke-dasharray="163.36" stroke-dashoffset="0" transform="rotate(-90)"/>
+    <text class="centro" text-anchor="middle" dy="5">&#10003;</text>
+  </g>
+  <text class="titulo" x="142" y="82" text-anchor="middle">2_Portal</text>
+  <text class="subtitulo" x="142" y="96" text-anchor="middle">Testar login e painel</text>
+
+  <!-- Etapa 3 - concluída -->
+  <g transform="translate(237,36)">
+    <circle r="26" fill="none" stroke="#e5e7eb" stroke-width="5"/>
+    <circle r="26" fill="none" stroke="#0d9488" stroke-width="5" stroke-linecap="round"
+            stroke-dasharray="163.36" stroke-dashoffset="0" transform="rotate(-90)"/>
+    <text class="centro" text-anchor="middle" dy="5">&#10003;</text>
+  </g>
+  <text class="titulo" x="237" y="82" text-anchor="middle">3_RPA</text>
+  <text class="subtitulo" x="237" y="96" text-anchor="middle">Automatizar o portal</text>
+
+  <!-- Etapa 4 - concluída -->
+  <g transform="translate(332,36)">
+    <circle r="26" fill="none" stroke="#e5e7eb" stroke-width="5"/>
+    <circle r="26" fill="none" stroke="#0d9488" stroke-width="5" stroke-linecap="round"
+            stroke-dasharray="163.36" stroke-dashoffset="0" transform="rotate(-90)"/>
+    <text class="centro" text-anchor="middle" dy="5">&#10003;</text>
+  </g>
+  <text class="titulo" x="332" y="82" text-anchor="middle">4_Leitura</text>
+  <text class="subtitulo" x="332" y="96" text-anchor="middle">Ler CSV, Excel e PDF</text>
+
+  <!-- Etapa 5 - em andamento (20%) -->
+  <g transform="translate(427,36)">
+    <circle r="26" fill="none" stroke="#e5e7eb" stroke-width="5"/>
+    <circle r="26" fill="none" stroke="#ca8a04" stroke-width="5" stroke-linecap="round"
+            stroke-dasharray="163.36" stroke-dashoffset="130.69" transform="rotate(-90)"/>
+    <text class="centro" text-anchor="middle" dy="5">20%</text>
+  </g>
+  <text class="titulo" x="427" y="82" text-anchor="middle">5_Médias</text>
+  <text class="subtitulo" x="427" y="96" text-anchor="middle">Consolidar e calcular</text>
+
+  <!-- Etapa 6 - pendente -->
+  <g transform="translate(522,36)">
+    <circle r="26" fill="none" stroke="#e5e7eb" stroke-width="5"/>
+    <text class="centro-claro" text-anchor="middle" dy="5">&#8212;</text>
+  </g>
+  <text class="titulo" x="522" y="82" text-anchor="middle">6_Boletins</text>
+  <text class="subtitulo" x="522" y="96" text-anchor="middle">Gerar boletim por aluno</text>
+
+  <!-- Etapa 7 - pendente -->
+  <g transform="translate(617,36)">
+    <circle r="26" fill="none" stroke="#e5e7eb" stroke-width="5"/>
+    <text class="centro-claro" text-anchor="middle" dy="5">&#8212;</text>
+  </g>
+  <text class="titulo" x="617" y="82" text-anchor="middle">7_Dashboard</text>
+  <text class="subtitulo" x="617" y="96" text-anchor="middle">Painel com indicadores</text>
+
+  <!-- Etapa 8 - backlog -->
+  <g transform="translate(712,36)">
+    <circle r="26" fill="none" stroke="#d1d5db" stroke-width="5" stroke-dasharray="6 6"/>
+    <text class="centro-claro" text-anchor="middle" dy="5">v2</text>
+  </g>
+  <text class="titulo" x="712" y="82" text-anchor="middle">8_v2</text>
+  <text class="subtitulo" x="712" y="96" text-anchor="middle">Melhorias futuras</text>
+</svg>

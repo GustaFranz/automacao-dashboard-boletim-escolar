@@ -2,7 +2,7 @@
 
 Projeto em Python para consolidar notas de simulado, provas e projeto pedagógico, calcular médias ponderadas, gerar boletins e montar um dashboard escolar.
 
-**Status:** em construção — Desafios 2 e 3 concluídos; automação RPA do portal implementada.
+**Status:** em construção — etapas 1 a 4 concluídas; **5_Médias** em andamento.
 
 ## Por que este projeto existe
 
@@ -28,18 +28,26 @@ Simula a rotina de uma coordenação escolar com **automação ponta a ponta**:
 
 ## Progresso
 
-| Desafio | Conteúdo | Status |
-|---------|----------|--------|
-| 1 | Mapeamento dos dados de entrada | Concluído |
-| 2 | Validação do portal fictício | Concluído |
-| 3 | Automação do download do simulado | Concluído |
-| 4 | Leitura dos arquivos de notas | Pendente |
-| 5 | Consolidação e cálculo de médias | Pendente |
-| 6 | Geração de boletins | Pendente |
-| 7 | Dashboard escolar | Pendente |
-| 8 | Evoluções (versão 2) | Backlog |
+**4 de 8 etapas concluídas** · etapa **5_Médias** em andamento (20%)
 
-Detalhes e aprendizados em **[detalhamento.md](detalhamento.md)**.
+<p align="center">
+  <img src="docs/progresso-etapas.svg" alt="Progresso: 1_Dados, 2_Portal, 3_RPA e 4_Leitura concluídos; 5_Médias em andamento; demais pendentes" width="760">
+</p>
+
+| Situação | Significado |
+|----------|-------------|
+| anel fechado ✓ | concluído |
+| anel parcial (%) | em andamento |
+| anel vazio | pendente |
+| anel tracejado | backlog |
+
+Detalhes de cada etapa em **[detalhamento.md](detalhamento.md)**.
+
+## Aprendizados (até aqui)
+
+- Primeira automação em Python: o fluxo parecia complexo no início, mas repetir funções e mapear coordenadas com PyAutoGUI foi tornando o processo compreensível.
+
+Registro completo por desafio em **[detalhamento.md](detalhamento.md)**.
 
 ## Automação RPA — evidências (Desafio 3)
 
@@ -95,6 +103,8 @@ automacao-dashboard-boletim-escolar/
 │   ├── simulados/
 │   ├── provas/
 │   └── projetos/
+├── docs/
+│   └── progresso-etapas.svg
 ├── gifs/
 │   ├── rpa-mapeamento-coordenadas.gif
 │   └── rpa-fluxo-completo-portal.gif
