@@ -31,7 +31,7 @@ Simula a rotina de uma coordenação escolar com **automação ponta a ponta**:
 **4 de 8 etapas concluídas** · etapa **5_Médias** em andamento (20%)
 
 <p align="center">
-  <img src="docs/progresso-etapas.svg" alt="Progresso: 1_Dados, 2_Portal, 3_RPA e 4_Leitura concluídos; 5_Médias em andamento; demais pendentes" width="760">
+  <img src="docs/progresso-etapas.png" alt="Progresso: 1_Dados, 2_Portal, 3_RPA e 4_Leitura concluídos; 5_Médias em andamento; demais pendentes" width="760">
 </p>
 
 | Situação | Significado |
@@ -68,12 +68,12 @@ O script [`src/automacao_portal.py`](src/automacao_portal.py) abre o portal no C
 
 <table>
   <tr>
-    <td width="50%" align="center"><strong>Mapeamento de coordenadas</strong></td>
-    <td width="50%" align="center"><strong>Fluxo completo</strong></td>
+    <td width="50%" align="center"><strong>Mapeamento de coordenadas com PyAutoGUI</strong></td>
+    <td width="50%" align="center"><strong>Fluxo e coleta de dados no portal de notas</strong></td>
   </tr>
   <tr>
     <td width="50%"><img src="gifs/rpa-mapeamento-coordenadas.gif" alt="Mapeamento de coordenadas com PyAutoGUI" width="100%"></td>
-    <td width="50%"><img src="gifs/rpa-fluxo-completo-portal.gif" alt="Fluxo completo de automação do portal" width="100%"></td>
+    <td width="50%"><img src="gifs/rpa-fluxo-completo-portal.gif" alt="Fluxo e coleta de dados no portal de notas" width="100%"></td>
   </tr>
   <tr>
     <td width="50%" align="center"><sub>Pausa no código, mouse sobre o elemento e leitura da coordenada no terminal.</sub></td>
@@ -104,7 +104,8 @@ automacao-dashboard-boletim-escolar/
 │   ├── provas/
 │   └── projetos/
 ├── docs/
-│   └── progresso-etapas.svg
+│   ├── progresso-etapas.svg
+│   └── progresso-etapas.png
 ├── gifs/
 │   ├── rpa-mapeamento-coordenadas.gif
 │   └── rpa-fluxo-completo-portal.gif
