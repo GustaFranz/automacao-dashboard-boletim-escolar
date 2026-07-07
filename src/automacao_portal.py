@@ -65,26 +65,29 @@ def botao_voltar():
     esperar(2)
 
 
-abrir_portal()
-fazer_login()
-esperar(2)
+def executar_automacao():
+    abrir_portal()
+    fazer_login()
+    esperar(2)
 
-painel_simulado_da_turma(351, 459)  # Aba 6º ano
-esperar(2)
-baixar_csv_turma(349, 407)  # Baixar CSV 6º ano 
-esperar(2)
-mover_csv_baixado("simulado_6ano.csv")
-botao_voltar()
+    painel_simulado_da_turma(351, 459)  # Aba 6º ano
+    esperar(2)
+    baixar_csv_turma(349, 407)  # Baixar CSV 6º ano
+    esperar(2)
+    mover_csv_baixado("simulado_6ano.csv")
+    botao_voltar()
 
-painel_simulado_da_turma(808, 462)  # Aba 7º ano
-baixar_csv_turma(349, 407)  # Baixar CSV 7º 
-esperar(2)
-mover_csv_baixado("simulado_7ano.csv")
-botao_voltar()
+    painel_simulado_da_turma(808, 462)  # Aba 7º ano
+    baixar_csv_turma(349, 407)  # Baixar CSV 7º
+    esperar(2)
+    mover_csv_baixado("simulado_7ano.csv")
+    botao_voltar()
 
-painel_simulado_da_turma(1268, 459)  # Aba 8º ano
-baixar_csv_turma(349, 407)  # Baixar CSV 8º
-esperar(2)
-mover_csv_baixado("simulado_8ano.csv")
+    painel_simulado_da_turma(1268, 459)  # Aba 8º ano
+    baixar_csv_turma(349, 407)  # Baixar CSV 8º
+    esperar(2)
+    mover_csv_baixado("simulado_8ano.csv")
 
 
+if __name__ == "__main__":
+    executar_automacao()
