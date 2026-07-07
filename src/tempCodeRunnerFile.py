@@ -1,6 +1,5 @@
-painel_simulado_da_turma(808, 462)  # Aba 7º ano
-# baixar_csv_turma(349, 407)  # Baixar CSV 7º 
-# esperar(2)
+from pathlib import Path
 
-# painel_simulado_da_turma(1268, 459)  # Aba 8º ano
-# baixar_csv_turma(349, 407)  # Baixar CSV 8º
+from src.leitor_projetos import ler_projetos, transformar_projetos_para_longo
+from src.leitor_provas import ler_provas, transformar_provas_para_longo
+from src.leitor_simulados import ler_simulados, transformar_simulados_para_longo
