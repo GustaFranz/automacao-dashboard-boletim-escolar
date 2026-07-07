@@ -1,0 +1,7 @@
+pandas
+openpyxl
+pdfplumber
+reportlab
+streamlit
+plotly
+pyautogui
