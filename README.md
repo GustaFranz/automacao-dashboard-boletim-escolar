@@ -14,33 +14,34 @@ O foco aqui não é substituir um sistema escolar real, e sim **praticar automa�
 
 ## O que o projeto faz (visão geral)
 
-Simula a rotina de uma coordenação escolar:
+Simula a rotina de uma coordenação escolar com **automação ponta a ponta**:
 
-1. Receber notas de várias fontes (portal, planilhas e PDFs).
-2. Consolidar tudo em uma única base.
-3. Calcular médias ponderadas por disciplina.
-4. Gerar boletins individuais.
-5. Montar um dashboard com indicadores da turma.
+1. **Automatizar o portal** — com PyAutoGUI, o sistema acessa o portal local, faz login e baixa os CSVs de simulado simulando a interação humana (RPA).
+2. **Processar os dados** — lê notas de CSV, Excel e PDF e consolida tudo em uma base única.
+3. **Aplicar regras pedagógicas** — calcula médias ponderadas e define aprovação ou recuperação.
+4. **Gerar entregas** — produz boletins individuais e um dashboard interativo com indicadores da turma.
 
 **Escola fictícia:** Colégio Caminhos do Futuro  
-**Turmas:** 6º, 7º e 8º ano matutino.
+**Turmas:** 6º, 7º e 8º ano matutino
+
+> Cenário inspirado na rotina escolar: várias fontes de nota, portal sem API e tarefas repetitivas que podem ser automatizadas.
 
 ## Como construir o projeto
 
-Todo o desenvolvimento segue o arquivo **[GUIA_PASSO_A_PASSO.md](GUIA_PASSO_A_PASSO.md)**.
+O desenvolvimento é organizado em desafios descritos em **[detalhamento.md](detalhamento.md)**.
 
-Cada etapa traz objetivo, explicação, o que testar, erros comuns e critério de sucesso. A ideia é ir implementando aos poucos, sem pular etapas.
+Cada desafio define contexto, requisitos, entradas, saídas e critérios de aceite — sem prescrever a implementação. A ideia é ir resolvendo aos poucos, pesquisando e praticando cada etapa.
 
-| Etapa | Conteúdo |
-|-------|----------|
-| 1 | Entender os dados de entrada |
-| 2 | Testar o portal fictício |
-| 3 | Automatizar download do simulado com PyAutoGUI |
-| 4 | Ler CSV, Excel e PDF |
-| 5 | Consolidar notas e calcular médias |
-| 6 | Gerar boletins |
-| 7 | Criar dashboard com Streamlit e Plotly |
-| 8 | Ideias para a versão 2 |
+| Desafio | Conteúdo |
+|---------|----------|
+| 1 | Mapeamento dos dados de entrada |
+| 2 | Validação do portal fictício |
+| 3 | Automação do download do simulado |
+| 4 | Leitura dos arquivos de notas |
+| 5 | Consolidação e cálculo de médias |
+| 6 | Geração de boletins |
+| 7 | Dashboard escolar |
+| 8 | Evoluções (versão 2) |
 
 ## Estrutura prevista
 
@@ -55,12 +56,12 @@ automacao-dashboard-boletim-escolar/
 ├── saidas/
 │   ├── boletins/
 │   └── prints/
-├── GUIA_PASSO_A_PASSO.md
+├── detalhamento.md
 ├── requirements.txt
 └── README.md
 ```
 
-> Nem todas as pastas e scripts existem ainda. Elas serão criadas conforme as etapas do guia.
+> Nem todas as pastas e scripts existem ainda. Elas serão criadas conforme os desafios do detalhamento.
 
 ## Fontes de dados (simuladas)
 
