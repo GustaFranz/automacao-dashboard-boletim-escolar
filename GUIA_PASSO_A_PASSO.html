@@ -971,6 +971,180 @@ python src/automacao_portal.py
 git commit -m "Automatiza download de CSV de uma turma"
 git push</code></pre>
 
+<h2>4.11.1 - Pausa de aprendizado: mover o CSV baixado para a pasta correta</h2>
+<p>Durante o teste da automacao, percebemos um detalhe importante: clicar no botao Baixar CSV nao garante que o arquivo va direto para a pasta do projeto.</p>
+<p>Na pratica, quem decide o local do download e o navegador. No Chrome, normalmente os arquivos vao para:</p>
+<pre><code data-lang="text">
+C:\Users\mgran\Downloads
+</code></pre>
+<p>Mas o nosso projeto precisa que os simulados fiquem em:</p>
+<pre><code data-lang="text">
+dados/simulados/
+</code></pre>
+<p>Entao fizemos uma pausa no processo para pesquisar e estudar uma forma simples de resolver isso. A solucao escolhida foi:</p>
+<p>1. deixar o Chrome baixar normalmente na pasta Downloads;</p>
+<p>2. usar Python para mover o arquivo baixado para dados/simulados/;</p>
+<p>3. repetir isso para simulado_6ano.csv, simulado_7ano.csv e simulado_8ano.csv.</p>
+<p>Essa e uma melhoria importante porque transforma o projeto em uma automacao mais completa: alem de clicar e baixar, ele tambem organiza os arquivos.</p>
+<h2>Primeiro acrescimo: importar shutil</h2>
+<p>No topo do arquivo src/automacao_portal.py, onde estao os imports, acrescente:</p>
+<pre><code data-lang="python">
+import shutil
+</code></pre>
+<p>Se o inicio do arquivo estava assim:</p>
+<pre><code data-lang="python">
+from pathlib import Path
+import time
+import webbrowser
+import pyautogui
+</code></pre>
+<p>Ele deve ficar assim:</p>
+<pre><code data-lang="python">
+from pathlib import Path
+import time
+import webbrowser
+import shutil
+import pyautogui
+</code></pre>
+<h2>Explicacao linha por linha</h2>
+<p>import shutil</p>
+<p>Importa uma biblioteca padrao do Python usada para operacoes com arquivos e pastas.</p>
+<p>Ela permite mover arquivos com:</p>
+<pre><code data-lang="python">
+shutil.move(origem, destino)
+</code></pre>
+<p>Nao precisa instalar com pip, porque shutil ja vem com o Python.</p>
+<h2>Segundo acrescimo: criar os caminhos das pastas</h2>
+<p>Abaixo destas linhas:</p>
+<pre><code data-lang="python">
+pasta_projeto = Path(__file__).resolve().parent.parent
+portal_login = pasta_projeto / &quot;portal_simulado&quot; / &quot;login.html&quot;
+pasta_prints = pasta_projeto / &quot;saidas&quot; / &quot;prints&quot;
+</code></pre>
+<p>Acrescente:</p>
+<pre><code data-lang="python">
+pasta_downloads = Path.home() / &quot;Downloads&quot;
+pasta_simulados = pasta_projeto / &quot;dados&quot; / &quot;simulados&quot;
+</code></pre>
+<h2>Explicacao linha por linha</h2>
+<p>pasta_downloads = Path.home() / &quot;Downloads&quot;</p>
+<p>Path.home() encontra a pasta do usuario atual do Windows.</p>
+<p>No seu caso, geralmente sera:</p>
+<pre><code data-lang="text">
+C:\Users\mgran
+</code></pre>
+<p>Ao juntar com &quot;Downloads&quot;, chegamos em:</p>
+<pre><code data-lang="text">
+C:\Users\mgran\Downloads
+</code></pre>
+<p>Essa e a pasta onde o Chrome normalmente salva os arquivos baixados.</p>
+<p>pasta_simulados = pasta_projeto / &quot;dados&quot; / &quot;simulados&quot;</p>
+<p>Monta o caminho da pasta correta dentro do projeto, onde queremos deixar os CSVs do simulado.</p>
+<h2>Terceiro acrescimo: criar a funcao que move o CSV</h2>
+<p>Coloque esta funcao depois da funcao baixar_csv_da_turma:</p>
+<pre><code data-lang="python">
+def mover_csv_baixado(nome_arquivo):
+    origem = pasta_downloads / nome_arquivo
+    destino = pasta_simulados / nome_arquivo
+
+    if not origem.exists():
+        print(f&quot;Arquivo nao encontrado: {origem}&quot;)
+        return
+
+    if destino.exists():
+        destino.unlink()
+
+    shutil.move(origem, destino)
+    print(f&quot;Arquivo movido para: {destino}&quot;)
+</code></pre>
+<h2>Explicacao linha por linha</h2>
+<p>def mover_csv_baixado(nome_arquivo):</p>
+<p>Cria uma funcao que recebe o nome do arquivo que acabou de ser baixado.</p>
+<p>Exemplo:</p>
+<pre><code data-lang="python">
+mover_csv_baixado(&quot;simulado_6ano.csv&quot;)
+</code></pre>
+<p>origem = pasta_downloads / nome_arquivo</p>
+<p>Monta o caminho onde o arquivo deve estar depois do download.</p>
+<p>Exemplo:</p>
+<pre><code data-lang="text">
+C:\Users\mgran\Downloads\simulado_6ano.csv
+</code></pre>
+<p>destino = pasta_simulados / nome_arquivo</p>
+<p>Monta o caminho final dentro do projeto.</p>
+<p>Exemplo:</p>
+<pre><code data-lang="text">
+dados/simulados/simulado_6ano.csv
+</code></pre>
+<p>if not origem.exists():</p>
+<p>Verifica se o arquivo realmente existe na pasta Downloads.</p>
+<p>print(f&quot;Arquivo nao encontrado: {origem}&quot;)</p>
+<p>Mostra uma mensagem no terminal caso o arquivo nao tenha sido encontrado.</p>
+<p>return</p>
+<p>Encerra a funcao ali mesmo, porque nao ha arquivo para mover.</p>
+<p>if destino.exists():</p>
+<p>Verifica se ja existe um arquivo com o mesmo nome na pasta dados/simulados.</p>
+<p>destino.unlink()</p>
+<p>Apaga o arquivo antigo antes de mover o novo.</p>
+<p>Isso evita erro quando voce roda a automacao mais de uma vez.</p>
+<p>shutil.move(origem, destino)</p>
+<p>Move o arquivo da pasta Downloads para a pasta correta do projeto.</p>
+<p>print(f&quot;Arquivo movido para: {destino}&quot;)</p>
+<p>Mostra no terminal que o arquivo foi movido com sucesso.</p>
+<h2>Quarto acrescimo: chamar a funcao depois de cada download</h2>
+<p>Depois do download do 6 ano, use:</p>
+<pre><code data-lang="python">
+painel_simulado_da_turma(351, 459)  # Aba 6 ano
+esperar(2)
+baixar_csv_da_turma(349, 407)  # Baixar CSV 6 ano
+esperar(2)
+mover_csv_baixado(&quot;simulado_6ano.csv&quot;)
+botao_voltar()
+</code></pre>
+<p>Depois do download do 7 ano:</p>
+<pre><code data-lang="python">
+painel_simulado_da_turma(808, 462)  # Aba 7 ano
+baixar_csv_da_turma(349, 407)  # Baixar CSV 7 ano
+esperar(2)
+mover_csv_baixado(&quot;simulado_7ano.csv&quot;)
+botao_voltar()
+</code></pre>
+<p>Depois do download do 8 ano:</p>
+<pre><code data-lang="python">
+painel_simulado_da_turma(1268, 459)  # Aba 8 ano
+baixar_csv_da_turma(349, 407)  # Baixar CSV 8 ano
+esperar(2)
+mover_csv_baixado(&quot;simulado_8ano.csv&quot;)
+</code></pre>
+<h2>Atenção antes de testar</h2>
+<p>Se ja existirem arquivos antigos na pasta Downloads, o Chrome pode baixar com nomes assim:</p>
+<pre><code data-lang="text">
+simulado_6ano (1).csv
+simulado_7ano (1).csv
+simulado_8ano (1).csv
+</code></pre>
+<p>Para evitar confusao nesta primeira versao, antes de testar apague da pasta Downloads os arquivos antigos:</p>
+<pre><code data-lang="text">
+simulado_6ano.csv
+simulado_7ano.csv
+simulado_8ano.csv
+</code></pre>
+<h2>Teste</h2>
+<p>Rode a automacao:</p>
+<pre><code data-lang="powershell">
+python src/automacao_portal.py
+</code></pre>
+<p>Depois confira se os arquivos estao em:</p>
+<pre><code data-lang="text">
+dados/simulados/
+</code></pre>
+<h2>Momento de commit</h2>
+<p>Depois que os CSVs forem baixados e movidos para a pasta correta:</p>
+<pre><code data-lang="powershell">
+git add src/automacao_portal.py dados/simulados
+git commit -m &quot;Move CSVs baixados para a pasta de simulados&quot;
+git push
+</code></pre>
 <h2 id="4-12-bloco-final-juntar-tudo-na-funcao-principal">4.12 - Bloco final: juntar tudo na funcao principal</h2>
 
 <p>Adicione:</p>
