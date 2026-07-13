@@ -1,11 +1,11 @@
-﻿# Automação — Dashboard e Boletim Escolar
+﻿# School Data Pipeline
 
 ![Python](https://img.shields.io/badge/Python-3.12-blue)
 ![Streamlit](https://img.shields.io/badge/Dashboard-Streamlit-ff4b4b)
 ![Pandas](https://img.shields.io/badge/Dados-Pandas-150458)
 ![Status](https://img.shields.io/badge/Status-v1%20concluida-green)
 
-Projeto em Python para consolidar notas de simulado, provas e projeto pedagógico, calcular médias ponderadas, gerar boletins e montar um dashboard escolar.
+Pipeline em Python para extrair, consolidar e publicar dados escolares: notas de simulado, provas e projeto pedagógico, com médias ponderadas, boletins e dashboard.
 
 **Status:** v1 concluída — etapas 1 a 7 implementadas; **8_v2** permanece como backlog de melhorias.
 
@@ -19,9 +19,9 @@ Depois de um primeiro contato com automação (inspirado por material introdutó
 
 O foco aqui não é substituir um sistema escolar real, e sim **praticar automação com um contexto educacional fictício**, próximo da realidade do dia a dia.
 
-## O que o projeto faz (visão geral)
+## O que o pipeline faz (visão geral)
 
-Simula a rotina de uma coordenação escolar com **automação ponta a ponta**:
+Simula a rotina de uma coordenação escolar com um **pipeline ponta a ponta**:
 
 1. **Automatizar o portal** — com PyAutoGUI, o sistema acessa o portal local, faz login e baixa os CSVs de simulado simulando a interação humana (RPA).
 2. **Processar os dados** — lê notas de CSV, Excel e PDF e consolida tudo em uma base única.
@@ -33,7 +33,7 @@ Simula a rotina de uma coordenação escolar com **automação ponta a ponta**:
 
 > Cenário inspirado na rotina escolar: várias fontes de nota, portal sem API e tarefas repetitivas que podem ser automatizadas.
 
-## Fluxo da automação
+## Fluxo do pipeline
 
 ```mermaid
 flowchart LR
@@ -160,7 +160,7 @@ Cada desafio define contexto, requisitos, entradas, saídas e critérios de acei
 ## Estrutura do repositório
 
 ```text
-automacao-dashboard-boletim-escolar/
+school-data-pipeline/
 ├── dados/
 │   ├── simulados/
 │   ├── provas/
@@ -211,6 +211,12 @@ automacao-dashboard-boletim-escolar/
 
 Dependências listadas em `requirements.txt`.
 
+## Material de apoio — Pathlib e Shutil
+
+Guia em PDF (texto selecionável) com exemplos alinhados ao **School Data Pipeline** — caminhos com `Path`, `glob`, `mkdir`, `read_text`/`write_text` e `shutil.move`:
+
+**[Baixar Pathlib_e_Shutil_em_Python.pdf](https://raw.githubusercontent.com/GustaFranz/exercicios_python/main/materiais/python/Pathlib_e_Shutil_em_Python.pdf)** · [exercicios_python/materiais](https://github.com/GustaFranz/exercicios_python/tree/main/materiais/python)
+
 ## Portal simulado (login fictício)
 
 Abra `portal_simulado/login.html` no navegador.
@@ -220,6 +226,6 @@ Abra `portal_simulado/login.html` no navegador.
 
 ## Transparência
 
-O portal escolar deste projeto é uma **simulação local**. Não representa nenhuma instituição real e não utiliza dados pessoais de alunos.
+O portal escolar do **School Data Pipeline** é uma **simulação local**. Não representa nenhuma instituição real e não utiliza dados pessoais de alunos.
 
 Parte do material inicial (como o portal HTML) foi estruturada com apoio de ferramentas de IA, sempre dentro de um cenário fictício e educacional.

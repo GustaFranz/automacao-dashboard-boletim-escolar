@@ -187,7 +187,7 @@ def gerar_dashboard(notas):
     titulo = _fonte(26, True)
     texto = _fonte(14)
     metrica = _fonte(22, True)
-    draw.text((24, 18), "Dashboard de Boletins Escolares", fill="#111827", font=titulo)
+    draw.text((24, 18), "School Data Pipeline", fill="#111827", font=titulo)
     draw.text((24, 52), f"Turma selecionada: {turma}", fill="#6b7280", font=texto)
 
     metricas = [

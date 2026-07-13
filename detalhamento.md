@@ -1,6 +1,6 @@
-# Detalhamento do projeto
+# Detalhamento do projeto — School Data Pipeline
 
-Documento de referência dos módulos desta automação. Cada seção descreve um desafio a ser implementado: requisitos, entradas, saídas e critérios de aceite — sem prescrever a solução em código.
+Documento de referência dos módulos deste pipeline de dados escolares. Cada seção descreve um desafio a ser implementado: requisitos, entradas, saídas e critérios de aceite — sem prescrever a solução em código.
 
 **Escola fictícia:** Colégio Caminhos do Futuro  
 **Status geral:** v1 concluída — Desafios 1 a 7 implementados; Desafio 8 em backlog
@@ -38,9 +38,9 @@ Este projeto simula a rotina de uma coordenação escolar fictícia. Os dados s�
 | Provas | Excel | Professores |
 | Projeto pedagógico | PDF | Coordenação |
 
-## Visão da automação
+## Visão do pipeline
 
-Este projeto combina três camadas de automação:
+Este projeto combina três camadas de um pipeline de dados escolares:
 
 | Camada | Descrição |
 |--------|-----------|

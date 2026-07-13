@@ -4,10 +4,10 @@ import streamlit as st
 from src import consolidacao
 
 
-st.set_page_config(page_title="Dashboard de Boletins", layout="wide")
+st.set_page_config(page_title="School Data Pipeline", layout="wide")
 
-st.title("Dashboard de Boletins Escolares")
-st.caption("Colegio Caminhos do Futuro - dados ficticios")
+st.title("School Data Pipeline")
+st.caption("Colegio Caminhos do Futuro — dados ficticios")
 
 notas = consolidacao.consolidar_notas()
 

@@ -4,7 +4,7 @@ from src.consolidacao import consolidar_notas, salvar_relatorio_final
 
 
 def main():
-    print("Iniciando automacao do portal...")
+    print("School Data Pipeline — iniciando coleta no portal...")
     executar_automacao()
 
     print("Consolidando notas...")
